@@ -2,7 +2,6 @@ package pl.piotr.iotdbmanagement.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.piotr.iotdbmanagement.entity.sensors.Measurment;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,5 +29,8 @@ public class MeasurmentDate implements Serializable {
 
     @OneToOne(mappedBy = "measurmentDate")
     private Measurment measurment;
+
+    @OneToOne(mappedBy = "lastMeasurment")
+    private Sensor sensor;
 
 }

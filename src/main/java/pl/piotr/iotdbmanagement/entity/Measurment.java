@@ -1,4 +1,4 @@
-package pl.piotr.iotdbmanagement.entity.sensors;
+package pl.piotr.iotdbmanagement.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -18,8 +18,7 @@ import java.util.UUID;
 @SuperBuilder
 @Entity
 @Table(name = "measurments")
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Measurment implements Serializable {
+public class Measurment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,5 +35,9 @@ public abstract class Measurment implements Serializable {
     @OneToOne
     @JoinColumn(name = "date_id", referencedColumnName = "id")
     private MeasurmentDate measurmentDate;
+
+    @OneToOne
+    @JoinColumn(name = "sensor_id", referencedColumnName = "id")
+    private Sensor sensor;
 
 }

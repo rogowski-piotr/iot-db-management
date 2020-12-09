@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.piotr.iotdbmanagement.entity.MeasurmentDate;
+import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.repository.MeasurmentDateRepository;
 
 import java.util.List;
@@ -22,6 +23,10 @@ public class MeasurmentDateService {
 
     public List<MeasurmentDate> findAll() {
         return repository.findAll();
+    }
+
+    public List<MeasurmentDate> findAllBySensor(Sensor sensor) {
+        return repository.findAllBySensor(sensor);
     }
 
     public Optional<MeasurmentDate> find(UUID id) {
