@@ -1,0 +1,34 @@
+package pl.piotr.iotdbmanagement.entity;
+
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import pl.piotr.iotdbmanagement.entity.sensors.Measurment;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@EqualsAndHashCode
+@Entity
+@Table(name = "dates")
+public class MeasurmentDate implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
+    @Column(name = "timestamp")
+    private LocalDateTime timestamp;
+
+    @OneToOne(mappedBy = "measurmentDate")
+    private Measurment measurment;
+
+}
