@@ -2,6 +2,8 @@ package pl.piotr.iotdbmanagement.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,12 +20,13 @@ import java.io.Serializable;
 public class Sensor implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     @Column(name = "measurment_type")
-    private String measurmentType;
+    @Enumerated(EnumType.STRING)
+    private MeasurementType measurementType;
 
     @Column(name = "state")
     private Boolean state;
@@ -31,11 +34,17 @@ public class Sensor implements Serializable {
     @Column(name = "socket")
     private String socket;
 
-    @OneToOne
+    @Column(name = "measurement_frequency")
+    @Enumerated(EnumType.STRING)
+    private MeasurementsFrequency measurementsFrequency;
+
+    @ToString.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_measurment", referencedColumnName = "id")
     private MeasurmentDate lastMeasurment;
 
-    @OneToOne
+    @ToString.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "actual_position", referencedColumnName = "id")
     private Place actualPosition;
 

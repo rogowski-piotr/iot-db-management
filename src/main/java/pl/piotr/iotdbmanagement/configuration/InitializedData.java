@@ -6,6 +6,8 @@ import pl.piotr.iotdbmanagement.entity.Measurment;
 import pl.piotr.iotdbmanagement.entity.MeasurmentDate;
 import pl.piotr.iotdbmanagement.entity.Place;
 import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.service.MeasurmentDateService;
 import pl.piotr.iotdbmanagement.service.MeasurmentService;
 import pl.piotr.iotdbmanagement.service.PlaceService;
@@ -52,8 +54,9 @@ public class InitializedData {
                 .socket("192.168.0.19:50007")
                 .lastMeasurment(date)
                 .actualPosition(place)
-                .measurmentType("temperature")
+                .measurementType(MeasurementType.TEMPERATURE)
                 .state(true)
+                .measurementsFrequency(MeasurementsFrequency.ONCE_PER_MINUTE)
                 .build();
 
         Measurment measurment = Measurment.builder()

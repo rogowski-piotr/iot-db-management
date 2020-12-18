@@ -1,4 +1,4 @@
-package pl.piotr.iotdbmanagement.dto;
+package pl.piotr.iotdbmanagement.jobs.dto;
 
 import lombok.*;
 import pl.piotr.iotdbmanagement.entity.Measurment;

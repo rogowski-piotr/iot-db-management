@@ -32,11 +32,11 @@ public class Measurment implements Serializable {
     @JoinColumn(name = "place_id", referencedColumnName = "id")
     private Place place;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "date_id", referencedColumnName = "id")
     private MeasurmentDate measurmentDate;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sensor_id", referencedColumnName = "id")
     private Sensor sensor;
 
