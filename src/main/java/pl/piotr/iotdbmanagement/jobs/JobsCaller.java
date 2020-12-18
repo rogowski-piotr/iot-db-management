@@ -6,9 +6,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import pl.piotr.iotdbmanagement.entity.MeasurmentDate;
+import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.service.MeasurmentDateService;
+import pl.piotr.iotdbmanagement.service.MeasurmentService;
 import pl.piotr.iotdbmanagement.service.SensorService;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -22,20 +28,31 @@ public class JobsCaller {
     private static final int MAX_THREAD_NUMBER = 3;
     private ExecutorService executor;
     private SensorService sensorService;
-
+    private MeasurmentDateService dateService;
+    private MeasurmentService measurmentService;
 
     @Autowired
-    public JobsCaller(SensorService sensorService) {
+    public JobsCaller(SensorService sensorService, MeasurmentDateService dateService, MeasurmentService measurmentService) {
         this.sensorService = sensorService;
+        this.dateService = dateService;
+        this.measurmentService = measurmentService;
         executor = Executors.newFixedThreadPool(MAX_THREAD_NUMBER);
+    }
+
+    private void job(MeasurementsFrequency measurementsFrequency) {
+        logger.info("Job for :" + measurementsFrequency + " has been started");
+        List<Sensor> sensors = sensorService.findAllByMeasurementsFrequency(measurementsFrequency);
+        if (!sensors.isEmpty()) {
+            MeasurmentDate date = new MeasurmentDate(LocalDateTime.now());
+            dateService.create(date);
+            sensors.forEach(sensor -> executor.submit(new Job(sensor, date, measurmentService)));
+        }
     }
 
     @Async
     @Scheduled(cron = "0/15 * * * * ?", zone = "Europe/Warsaw")
     public void jobOncePerMinute() {
-        logger.info("Job for one per minute has been started");
-        sensorService.findAllByMeasurementsFrequency(MeasurementsFrequency.ONCE_PER_MINUTE)
-                .forEach(sensor -> executor.submit(new Job(sensor)));
+        job(MeasurementsFrequency.ONCE_PER_MINUTE);
     }
 
 }

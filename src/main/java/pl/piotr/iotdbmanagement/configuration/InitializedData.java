@@ -46,15 +46,13 @@ public class InitializedData {
                 .positionZ(20)
                 .build();
 
-        MeasurmentDate date = MeasurmentDate.builder()
-                .timestamp(LocalDateTime.now())
-                .build();
+        MeasurmentDate date = new MeasurmentDate(LocalDateTime.now());
 
         Sensor sensor = Sensor.builder()
                 .socket("192.168.0.19:50007")
                 .lastMeasurment(date)
                 .actualPosition(place)
-                .measurementType(MeasurementType.TEMPERATURE)
+                .measurementType(MeasurementType.TEMPERATURE_AND_HUMIDITY)
                 .state(true)
                 .measurementsFrequency(MeasurementsFrequency.ONCE_PER_MINUTE)
                 .build();

@@ -1,48 +1,81 @@
 package pl.piotr.iotdbmanagement.jobs;
 
 import com.google.gson.Gson;
-import lombok.SneakyThrows;
-import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureResponse;
+import pl.piotr.iotdbmanagement.entity.Measurment;
+import pl.piotr.iotdbmanagement.entity.MeasurmentDate;
+import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
 import pl.piotr.iotdbmanagement.entity.Sensor;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
+import pl.piotr.iotdbmanagement.service.MeasurmentService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Job implements Runnable {
 
     private Logger logger;
-    private MeasurementType measurementType;
-    private String address;
-    private Integer port;
+    private Sensor sensor;
+    private MeasurmentDate date;
+    private MeasurmentService service;
 
-    protected Job(Sensor sensor) {
+    protected Job(Sensor sensor, MeasurmentDate date, MeasurmentService service) {
         logger = Logger.getLogger("sensor at: " + sensor.getSocket());
-        this.measurementType = sensor.getMeasurementType();
-        this.address = sensor.getAddress();
-        this.port = sensor.getPort();
+        this.sensor = sensor;
+        this.date = date;
+        this.service = service;
     }
 
-    @SneakyThrows
     @Override
     public void run() {
-        try {
-            logger.info("Trying connect to: " + address + ":" + port);
-            Socket socket = new Socket(address, port);
+        logger.info("Trying connect to: " + sensor.getSocket());
+        String response;
 
+        try (Socket socket = new Socket(sensor.getAddress(), sensor.getPort())) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String responseServer = reader.readLine();
-            logger.info("received data: " + responseServer);
+            response = reader.readLine();
             reader.close();
-
-            MeasurmentTemperatureResponse response = new Gson().fromJson(responseServer, MeasurmentTemperatureResponse.class);
-            logger.info("converted data: " + response.getSensor() + ", " + response.getTemperature());
-        } catch (IOException e) {
-            logger.warning("Can not received data from: " + address + ":" + port);
+        } catch (IOException | NullPointerException e) {
+            logger.warning("Can not received data from: " + sensor.getSocket() + "; cause: " + e.getMessage());
+            return;
         }
+        logger.info("received data: " + response);
+
+        List<Measurment> measurments = new ArrayList<>();
+
+        switch (sensor.getMeasurementType()) {
+            case TEMPERATURE_AND_HUMIDITY:
+                MeasurmentTemperatureAndHumidityResponse responseObject = new Gson()
+                        .fromJson(response, MeasurmentTemperatureAndHumidityResponse.class);
+                measurments.add(
+                        MeasurmentTemperatureAndHumidityResponse
+                                .dtoToEntityTemperatureMapper().apply(responseObject));
+                measurments.add(
+                        MeasurmentTemperatureAndHumidityResponse
+                                .dtoToEntityHumidityMapper().apply(responseObject));
+                break;
+
+            case TEMPERATURE:
+                break;
+
+            case HUMIDITY:
+                break;
+
+            default:
+                return;
+        }
+
+        measurments.forEach(
+                measurment -> {
+                    measurment.setMeasurmentDate(date);
+                    measurment.setSensor(sensor);
+                    measurment.setPlace(sensor.getActualPosition());
+                    service.create(measurment);
+                });
+        logger.info("data has been inserted");
     }
 
 }

@@ -12,19 +12,25 @@ import java.util.function.Function;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
-public class MeasurmentTemperatureResponse {
+public class MeasurmentTemperatureAndHumidityResponse {
 
     private String sensor;
 
-    private Boolean isWorking;
+    private Boolean active;
 
     private Float temperature;
 
     private Float humidity;
 
-    public static Function<MeasurmentTemperatureResponse, Measurment> dtoToEntityMapper() {
+    public static Function<MeasurmentTemperatureAndHumidityResponse, Measurment> dtoToEntityTemperatureMapper() {
         return measurment -> Measurment.builder()
                 .value(measurment.getTemperature())
+                .build();
+    }
+
+    public static Function<MeasurmentTemperatureAndHumidityResponse, Measurment> dtoToEntityHumidityMapper() {
+        return measurment -> Measurment.builder()
+                .value(measurment.getHumidity())
                 .build();
     }
 

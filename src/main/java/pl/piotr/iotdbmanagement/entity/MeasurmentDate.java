@@ -13,6 +13,7 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 @EqualsAndHashCode
 @Entity
@@ -24,6 +25,7 @@ public class MeasurmentDate implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @NonNull
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
