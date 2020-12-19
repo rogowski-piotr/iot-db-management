@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.piotr.iotdbmanagement.entity.Measurment;
-import pl.piotr.iotdbmanagement.entity.MeasurmentDate;
 import pl.piotr.iotdbmanagement.entity.Place;
 import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.repository.MeasurmentRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,8 +36,8 @@ public class MeasurmentService {
         return repository.findAllByPlace(place);
     }
 
-    public List<Measurment> findAllByMeasurmentDate(MeasurmentDate measurmentDate) {
-        return repository.findAllByMeasurmentDate(measurmentDate);
+    public List<Measurment> findAllByMeasurmentDate(LocalDateTime dateTime) {
+        return repository.findAllByDate(dateTime);
     }
 
     public List<Measurment> findAllBySensor(Sensor sensor) {

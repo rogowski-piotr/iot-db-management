@@ -2,7 +2,6 @@ package pl.piotr.iotdbmanagement.jobs;
 
 import com.google.gson.Gson;
 import pl.piotr.iotdbmanagement.entity.Measurment;
-import pl.piotr.iotdbmanagement.entity.MeasurmentDate;
 import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
 import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.service.MeasurmentService;
@@ -11,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,13 +19,11 @@ public class Job implements Runnable {
 
     private Logger logger;
     private Sensor sensor;
-    private MeasurmentDate date;
     private MeasurmentService service;
 
-    protected Job(Sensor sensor, MeasurmentDate date, MeasurmentService service) {
+    protected Job(Sensor sensor, MeasurmentService service) {
         logger = Logger.getLogger("sensor at: " + sensor.getSocket());
         this.sensor = sensor;
-        this.date = date;
         this.service = service;
     }
 
@@ -70,7 +68,7 @@ public class Job implements Runnable {
 
         measurments.forEach(
                 measurment -> {
-                    measurment.setMeasurmentDate(date);
+                    measurment.setDate(LocalDateTime.now());
                     measurment.setSensor(sensor);
                     measurment.setPlace(sensor.getActualPosition());
                     service.create(measurment);

@@ -7,6 +7,7 @@ import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,24 +25,22 @@ public class Sensor implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "measurment_type")
-    @Enumerated(EnumType.STRING)
-    private MeasurementType measurementType;
+    @Column(name = "socket")
+    private String socket;
 
     @Column(name = "state")
     private Boolean state;
 
-    @Column(name = "socket")
-    private String socket;
+    @Column(name = "measurment_type")
+    @Enumerated(EnumType.STRING)
+    private MeasurementType measurementType;
 
     @Column(name = "measurement_frequency")
     @Enumerated(EnumType.STRING)
     private MeasurementsFrequency measurementsFrequency;
 
-    @ToString.Exclude
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_measurment", referencedColumnName = "id")
-    private MeasurmentDate lastMeasurment;
+    @Column(name = "last_measurment")
+    private LocalDateTime lastMeasurment;
 
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)

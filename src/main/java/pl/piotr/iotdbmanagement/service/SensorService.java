@@ -3,12 +3,12 @@ package pl.piotr.iotdbmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.piotr.iotdbmanagement.entity.MeasurmentDate;
 import pl.piotr.iotdbmanagement.entity.Place;
 import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.repository.SensorRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,7 +29,7 @@ public class SensorService {
         return repository.findAllByMeasurementsFrequency(measurementsFrequency);
     }
 
-    public List<Sensor> findAllByLastMeasurment(MeasurmentDate lastMeasurment) {
+    public List<Sensor> findAllByLastMeasurment(LocalDateTime lastMeasurment) {
         return repository.findAllByLastMeasurment(lastMeasurment);
     }
 

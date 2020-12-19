@@ -2,11 +2,10 @@ package pl.piotr.iotdbmanagement.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.piotr.iotdbmanagement.entity.MeasurmentDate;
-import pl.piotr.iotdbmanagement.entity.Place;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -28,15 +27,13 @@ public class Measurment implements Serializable {
     @Column(name = "value", updatable = false)
     private Float value;
 
+    @Column(name = "date")
+    private LocalDateTime date;
+
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", referencedColumnName = "id")
     private Place place;
-
-    @ToString.Exclude
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "date_id", referencedColumnName = "id")
-    private MeasurmentDate measurmentDate;
 
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
