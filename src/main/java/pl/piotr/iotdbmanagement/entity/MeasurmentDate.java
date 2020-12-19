@@ -29,9 +29,11 @@ public class MeasurmentDate implements Serializable {
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "measurmentDate")
     private Measurment measurment;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "lastMeasurment")
     private Sensor sensor;
 

@@ -40,7 +40,7 @@ public class JobsCaller {
     }
 
     private void job(MeasurementsFrequency measurementsFrequency) {
-        logger.info("Job for :" + measurementsFrequency + " has been started");
+        logger.info("Job for: " + measurementsFrequency + " has been started");
         List<Sensor> sensors = sensorService.findAllByMeasurementsFrequency(measurementsFrequency);
         if (!sensors.isEmpty()) {
             MeasurmentDate date = new MeasurmentDate(LocalDateTime.now());

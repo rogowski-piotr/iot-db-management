@@ -34,9 +34,11 @@ public class Place implements Serializable {
     @Column(name = "position_z")
     private int positionZ;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "place")
     private Measurment measurment;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "actualPosition")
     private Sensor sensor;
 

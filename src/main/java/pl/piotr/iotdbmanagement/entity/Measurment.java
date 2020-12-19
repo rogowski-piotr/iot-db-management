@@ -28,14 +28,17 @@ public class Measurment implements Serializable {
     @Column(name = "value", updatable = false)
     private Float value;
 
-    @OneToOne
+    @ToString.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", referencedColumnName = "id")
     private Place place;
 
+    @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "date_id", referencedColumnName = "id")
     private MeasurmentDate measurmentDate;
 
+    @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sensor_id", referencedColumnName = "id")
     private Sensor sensor;

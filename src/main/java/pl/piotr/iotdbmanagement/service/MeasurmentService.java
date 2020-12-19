@@ -7,6 +7,7 @@ import pl.piotr.iotdbmanagement.entity.Measurment;
 import pl.piotr.iotdbmanagement.entity.MeasurmentDate;
 import pl.piotr.iotdbmanagement.entity.Place;
 import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.repository.MeasurmentRepository;
 
 import java.util.List;
@@ -41,6 +42,10 @@ public class MeasurmentService {
 
     public List<Measurment> findAllBySensor(Sensor sensor) {
         return repository.findAllBySensor(sensor);
+    }
+
+    public List<Measurment> findAllBySensor_MeasurementType(MeasurementType measurementType) {
+        return repository.findAllBySensor_MeasurementType(measurementType);
     }
 
     @Transactional
