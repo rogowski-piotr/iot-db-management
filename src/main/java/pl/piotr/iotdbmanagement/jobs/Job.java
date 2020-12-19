@@ -41,6 +41,8 @@ public class Job implements Runnable {
             reader.close();
         } catch (IOException | NullPointerException e) {
             logger.warning("Can not received data from: " + sensor.getSocket() + "; cause: " + e.getMessage());
+            sensor.setState(false);
+            sensorService.update(sensor);
             return;
         }
         logger.info("received data: " + response);
@@ -57,7 +59,11 @@ public class Job implements Runnable {
             case TEMPERATURE_AND_HUMIDITY:
                 MeasurmentTemperatureAndHumidityResponse responseObject = new Gson()
                         .fromJson(response, MeasurmentTemperatureAndHumidityResponse.class);
-                if (!responseObject.getActive()) return;
+                if (sensor.getState() != responseObject.getActive()) {
+                    sensor.setState(responseObject.getActive());
+                    sensorService.update(sensor);
+                    if (!sensor.getState()) return;
+                }
                 measurments.add(
                         MeasurmentTemperatureAndHumidityResponse
                                 .dtoToEntityTemperatureMapper().apply(responseObject, infoObject));
@@ -78,12 +84,7 @@ public class Job implements Runnable {
 
         measurments
                 .forEach(measurment -> measurmentService.create(measurment));
-        /*measurments.forEach(
-                measurment -> {
-                    measurment.setSensor(sensor);
-                    measurment.setPlace(sensor.getActualPosition());
-                    measurmentService.create(measurment);
-                });*/
+
         logger.info("data has been inserted");
     }
 
