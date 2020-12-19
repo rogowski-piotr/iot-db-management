@@ -38,7 +38,7 @@ public class JobsCaller {
     private void job(MeasurementsFrequency measurementsFrequency) {
         logger.info("Job for: " + measurementsFrequency + " has been started");
         List<Sensor> sensors = sensorService.findAllByMeasurementsFrequency(measurementsFrequency);
-        sensors.forEach(sensor -> executor.submit(new Job(sensor, measurmentService)));
+        sensors.forEach(sensor -> executor.submit(new Job(sensor, measurmentService, sensorService)));
     }
 
     @Async

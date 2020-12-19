@@ -5,6 +5,7 @@ import pl.piotr.iotdbmanagement.entity.Measurment;
 import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
 import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.service.MeasurmentService;
+import pl.piotr.iotdbmanagement.service.SensorService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,12 +20,14 @@ public class Job implements Runnable {
 
     private Logger logger;
     private Sensor sensor;
-    private MeasurmentService service;
+    private MeasurmentService measurmentService;
+    private SensorService sensorService;
 
-    protected Job(Sensor sensor, MeasurmentService service) {
+    protected Job(Sensor sensor, MeasurmentService measurmentService, SensorService sensorService) {
         logger = Logger.getLogger("sensor at: " + sensor.getSocket());
         this.sensor = sensor;
-        this.service = service;
+        this.measurmentService = measurmentService;
+        this.sensorService = sensorService;
     }
 
     @Override
@@ -44,16 +47,23 @@ public class Job implements Runnable {
 
         List<Measurment> measurments = new ArrayList<>();
 
+        Measurment infoObject = Measurment.builder()
+                .date(LocalDateTime.now())
+                .sensor(sensor)
+                .place(sensor.getActualPosition())
+                .build();
+
         switch (sensor.getMeasurementType()) {
             case TEMPERATURE_AND_HUMIDITY:
                 MeasurmentTemperatureAndHumidityResponse responseObject = new Gson()
                         .fromJson(response, MeasurmentTemperatureAndHumidityResponse.class);
+                if (!responseObject.getActive()) return;
                 measurments.add(
                         MeasurmentTemperatureAndHumidityResponse
-                                .dtoToEntityTemperatureMapper().apply(responseObject));
+                                .dtoToEntityTemperatureMapper().apply(responseObject, infoObject));
                 measurments.add(
                         MeasurmentTemperatureAndHumidityResponse
-                                .dtoToEntityHumidityMapper().apply(responseObject));
+                                .dtoToEntityHumidityMapper().apply(responseObject, infoObject));
                 break;
 
             case TEMPERATURE:
@@ -66,13 +76,14 @@ public class Job implements Runnable {
                 return;
         }
 
-        measurments.forEach(
+        measurments
+                .forEach(measurment -> measurmentService.create(measurment));
+        /*measurments.forEach(
                 measurment -> {
-                    measurment.setDate(LocalDateTime.now());
                     measurment.setSensor(sensor);
                     measurment.setPlace(sensor.getActualPosition());
-                    service.create(measurment);
-                });
+                    measurmentService.create(measurment);
+                });*/
         logger.info("data has been inserted");
     }
 

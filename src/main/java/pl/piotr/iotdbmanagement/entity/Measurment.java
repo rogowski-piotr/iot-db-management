@@ -2,6 +2,7 @@ package pl.piotr.iotdbmanagement.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,6 +27,10 @@ public class Measurment implements Serializable {
 
     @Column(name = "value", updatable = false)
     private Float value;
+
+    @Column(name = "measurment_type")
+    @Enumerated(EnumType.STRING)
+    private MeasurementType measurementType;
 
     @Column(name = "date")
     private LocalDateTime date;

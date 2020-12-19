@@ -51,16 +51,26 @@ public class InitializedData {
                 .measurementsFrequency(MeasurementsFrequency.ONCE_PER_MINUTE)
                 .build();
 
-        Measurment measurment = Measurment.builder()
+        Measurment measurmentTemp = Measurment.builder()
                 .sensor(sensor)
                 .date(LocalDateTime.now())
                 .place(place)
                 .value((float) 21.5)
+                .measurementType(MeasurementType.TEMPERATURE)
+                .build();
+
+        Measurment measurmentHumi = Measurment.builder()
+                .sensor(sensor)
+                .date(LocalDateTime.now())
+                .place(place)
+                .value((float) 50)
+                .measurementType(MeasurementType.HUMIDITY)
                 .build();
 
         placeService.create(place);
         sensorService.create(sensor);
-        measurmentService.create(measurment);
+        measurmentService.create(measurmentTemp);
+        measurmentService.create(measurmentHumi);
     }
 
 }
