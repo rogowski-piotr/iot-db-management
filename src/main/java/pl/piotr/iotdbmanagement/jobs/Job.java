@@ -41,7 +41,7 @@ public class Job implements Runnable {
             reader.close();
         } catch (IOException | NullPointerException e) {
             logger.warning("Can not received data from: " + sensor.getSocket() + "; cause: " + e.getMessage());
-            sensor.setState(false);
+            sensor.setIsActive(false);
             sensorService.update(sensor);
             return;
         }
@@ -59,10 +59,10 @@ public class Job implements Runnable {
             case TEMPERATURE_AND_HUMIDITY:
                 MeasurmentTemperatureAndHumidityResponse responseObject = new Gson()
                         .fromJson(response, MeasurmentTemperatureAndHumidityResponse.class);
-                if (sensor.getState() != responseObject.getActive()) {
-                    sensor.setState(responseObject.getActive());
+                if ((boolean)sensor.getIsActive() != (boolean)responseObject.getActive()) {
+                    sensor.setIsActive(responseObject.getActive());
                     sensorService.update(sensor);
-                    if (!sensor.getState()) return;
+                    if (!sensor.getIsActive()) return;
                 }
                 measurments.add(
                         MeasurmentTemperatureAndHumidityResponse

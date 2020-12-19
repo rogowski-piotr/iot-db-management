@@ -28,8 +28,8 @@ public class Sensor implements Serializable {
     @Column(name = "socket")
     private String socket;
 
-    @Column(name = "state")
-    private Boolean state;
+    @Column(name = "active")
+    private Boolean isActive;
 
     @Column(name = "measurment_type")
     @Enumerated(EnumType.STRING)

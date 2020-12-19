@@ -47,7 +47,7 @@ public class InitializedData {
                 .lastMeasurment(LocalDateTime.now())
                 .actualPosition(place)
                 .measurementType(MeasurementType.TEMPERATURE_AND_HUMIDITY)
-                .state(true)
+                .isActive(true)
                 .measurementsFrequency(MeasurementsFrequency.ONCE_PER_MINUTE)
                 .build();
 
