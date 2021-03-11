@@ -11,6 +11,7 @@
     <modules>
         <module>client-api</module>
 		<module>sensor-managment</module>
+        <module>model</module>
     </modules>
 
 </project>
