@@ -5,6 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,11 +36,11 @@ public class Place implements Serializable {
     private int positionZ;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "place")
-    private Measurment measurment;
+    @OneToMany(mappedBy = "place")
+    private List<Measurment> measurments;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "actualPosition")
-    private Sensor sensor;
+    @OneToMany(mappedBy = "actualPosition")
+    private List<Sensor> sensors;
 
 }

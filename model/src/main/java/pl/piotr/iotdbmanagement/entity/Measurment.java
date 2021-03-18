@@ -36,13 +36,13 @@ public class Measurment implements Serializable {
     private LocalDateTime date;
 
     @ToString.Exclude
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "place_id")
     private Place place;
 
     @ToString.Exclude
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sensor_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "sensor_id")
     private Sensor sensor;
 
 }

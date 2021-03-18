@@ -8,6 +8,7 @@ import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -43,9 +44,13 @@ public class Sensor implements Serializable {
     private LocalDateTime lastMeasurment;
 
     @ToString.Exclude
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "actual_position", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name="actual_position")
     private Place actualPosition;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "sensor")
+    private List<Measurment> measurments;
 
     public String getAddress() {
         StringBuilder address = new StringBuilder();
