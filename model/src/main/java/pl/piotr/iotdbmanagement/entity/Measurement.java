@@ -18,7 +18,7 @@ import java.util.UUID;
 @SuperBuilder
 @Entity
 @Table(name = "measurments")
-public class Measurment implements Serializable {
+public class Measurement implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,12 +36,12 @@ public class Measurment implements Serializable {
     private LocalDateTime date;
 
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
 
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sensor_id")
     private Sensor sensor;
 

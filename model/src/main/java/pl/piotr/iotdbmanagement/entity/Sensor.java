@@ -49,8 +49,8 @@ public class Sensor implements Serializable {
     private Place actualPosition;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "sensor")
-    private List<Measurment> measurments;
+    @OneToMany(mappedBy = "sensor", fetch = FetchType.LAZY)
+    private List<Measurement> measurements;
 
     public String getAddress() {
         StringBuilder address = new StringBuilder();

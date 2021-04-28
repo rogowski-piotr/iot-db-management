@@ -1,12 +1,10 @@
 package pl.piotr.iotdbmanagement.jobs.dto;
 
 import lombok.*;
-import pl.piotr.iotdbmanagement.entity.Measurment;
+import pl.piotr.iotdbmanagement.entity.Measurement;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
-import java.time.LocalDateTime;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 @Getter
 @Setter
@@ -25,8 +23,8 @@ public class MeasurmentTemperatureAndHumidityResponse {
 
     private Float humidity;
 
-    public static BiFunction<MeasurmentTemperatureAndHumidityResponse, Measurment, Measurment> dtoToEntityTemperatureMapper() {
-        return (responseObj, infoObj) -> Measurment.builder()
+    public static BiFunction<MeasurmentTemperatureAndHumidityResponse, Measurement, Measurement> dtoToEntityTemperatureMapper() {
+        return (responseObj, infoObj) -> Measurement.builder()
                 .value(responseObj.getTemperature())
                 .measurementType(MeasurementType.TEMPERATURE)
                 .date(infoObj.getDate())
@@ -35,8 +33,8 @@ public class MeasurmentTemperatureAndHumidityResponse {
                 .build();
     }
 
-    public static BiFunction<MeasurmentTemperatureAndHumidityResponse, Measurment, Measurment> dtoToEntityHumidityMapper() {
-        return (responseObj, infoObj) -> Measurment.builder()
+    public static BiFunction<MeasurmentTemperatureAndHumidityResponse, Measurement, Measurement> dtoToEntityHumidityMapper() {
+        return (responseObj, infoObj) -> Measurement.builder()
                 .value(responseObj.getHumidity())
                 .measurementType(MeasurementType.HUMIDITY)
                 .date(infoObj.getDate())

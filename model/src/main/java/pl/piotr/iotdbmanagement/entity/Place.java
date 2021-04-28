@@ -36,11 +36,11 @@ public class Place implements Serializable {
     private int positionZ;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "place")
-    private List<Measurment> measurments;
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
+    private List<Measurement> measurements;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "actualPosition")
+    @OneToMany(mappedBy = "actualPosition", fetch = FetchType.LAZY)
     private List<Sensor> sensors;
 
 }

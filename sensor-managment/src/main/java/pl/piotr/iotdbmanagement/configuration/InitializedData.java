@@ -2,12 +2,12 @@ package pl.piotr.iotdbmanagement.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.piotr.iotdbmanagement.entity.Measurment;
+import pl.piotr.iotdbmanagement.entity.Measurement;
 import pl.piotr.iotdbmanagement.entity.Place;
 import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
-import pl.piotr.iotdbmanagement.service.MeasurmentService;
+import pl.piotr.iotdbmanagement.service.MeasurementService;
 import pl.piotr.iotdbmanagement.service.PlaceService;
 import pl.piotr.iotdbmanagement.service.SensorService;
 
@@ -21,14 +21,14 @@ public class InitializedData {
 
     private PlaceService placeService;
     private SensorService sensorService;
-    private MeasurmentService measurmentService;
+    private MeasurementService measurementService;
 
     @Autowired
     public InitializedData(PlaceService placeService, SensorService sensorService,
-                           MeasurmentService measurmentService) {
+                           MeasurementService measurementService) {
         this.placeService = placeService;
         this.sensorService = sensorService;
-        this.measurmentService = measurmentService;
+        this.measurementService = measurementService;
     }
 
     @PostConstruct
@@ -51,7 +51,7 @@ public class InitializedData {
                 .measurementsFrequency(MeasurementsFrequency.ONCE_PER_MINUTE)
                 .build();
 
-        Measurment measurmentTemp = Measurment.builder()
+        Measurement measurementTemp = Measurement.builder()
                 .sensor(sensor)
                 .date(LocalDateTime.now())
                 .place(place)
@@ -59,7 +59,7 @@ public class InitializedData {
                 .measurementType(MeasurementType.TEMPERATURE)
                 .build();
 
-        Measurment measurmentHumi = Measurment.builder()
+        Measurement measurementHumi = Measurement.builder()
                 .sensor(sensor)
                 .date(LocalDateTime.now())
                 .place(place)
@@ -69,8 +69,8 @@ public class InitializedData {
 
         placeService.create(place);
         sensorService.create(sensor);
-        measurmentService.create(measurmentTemp);
-        measurmentService.create(measurmentHumi);
+        measurementService.create(measurementTemp);
+        measurementService.create(measurementHumi);
     }
 
 }

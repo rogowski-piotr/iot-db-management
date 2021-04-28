@@ -1,10 +1,10 @@
 package pl.piotr.iotdbmanagement.jobs;
 
 import com.google.gson.Gson;
-import pl.piotr.iotdbmanagement.entity.Measurment;
+import pl.piotr.iotdbmanagement.entity.Measurement;
 import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
 import pl.piotr.iotdbmanagement.entity.Sensor;
-import pl.piotr.iotdbmanagement.service.MeasurmentService;
+import pl.piotr.iotdbmanagement.service.MeasurementService;
 import pl.piotr.iotdbmanagement.service.SensorService;
 
 import java.io.BufferedReader;
@@ -20,13 +20,13 @@ public class Job implements Runnable {
 
     private Logger logger;
     private Sensor sensor;
-    private MeasurmentService measurmentService;
+    private MeasurementService measurementService;
     private SensorService sensorService;
 
-    protected Job(Sensor sensor, MeasurmentService measurmentService, SensorService sensorService) {
+    protected Job(Sensor sensor, MeasurementService measurementService, SensorService sensorService) {
         logger = Logger.getLogger("sensor at: " + sensor.getSocket());
         this.sensor = sensor;
-        this.measurmentService = measurmentService;
+        this.measurementService = measurementService;
         this.sensorService = sensorService;
     }
 
@@ -47,9 +47,9 @@ public class Job implements Runnable {
         }
         logger.info("received data: " + response);
 
-        List<Measurment> measurments = new ArrayList<>();
+        List<Measurement> measurements = new ArrayList<>();
 
-        Measurment infoObject = Measurment.builder()
+        Measurement infoObject = Measurement.builder()
                 .date(LocalDateTime.now())
                 .sensor(sensor)
                 .place(sensor.getActualPosition())
@@ -64,10 +64,10 @@ public class Job implements Runnable {
                     sensorService.update(sensor);
                     if (!sensor.getIsActive()) return;
                 }
-                measurments.add(
+                measurements.add(
                         MeasurmentTemperatureAndHumidityResponse
                                 .dtoToEntityTemperatureMapper().apply(responseObject, infoObject));
-                measurments.add(
+                measurements.add(
                         MeasurmentTemperatureAndHumidityResponse
                                 .dtoToEntityHumidityMapper().apply(responseObject, infoObject));
                 break;
@@ -82,8 +82,8 @@ public class Job implements Runnable {
                 return;
         }
 
-        measurments
-                .forEach(measurment -> measurmentService.create(measurment));
+        measurements
+                .forEach(measurment -> measurementService.create(measurment));
 
         logger.info("data has been inserted");
     }
