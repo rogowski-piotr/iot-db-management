@@ -10,70 +10,51 @@ import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.repository.PlaceRepository;
 import pl.piotr.iotdbmanagement.repository.SensorRepository;
 
-import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SensorService {
+
     private SensorRepository sensorRepository;
+
     private PlaceRepository placeRepository;
 
     @Autowired
-    public SensorService(SensorRepository sensorRepository) {
+    public SensorService(SensorRepository sensorRepository, PlaceRepository placeRepository) {
         this.sensorRepository = sensorRepository;
-    }
-
-    public List<Sensor> findAll() {
-        return sensorRepository.findAll();
+        this.placeRepository = placeRepository;
     }
 
     public Optional<Sensor> find(Long id) {
         return sensorRepository.findById(id);
     }
 
-    public List<Sensor> findAllByMeasurementsFrequency(MeasurementsFrequency measurementsFrequency) {
-        return sensorRepository.findAllByMeasurementsFrequency(measurementsFrequency);
+    public Optional<Sensor> findBySocket(String socket) {
+        return sensorRepository.findBySocket(socket);
     }
 
     public List<Sensor> findAllByMeasurementsFrequencyAndIsActive(MeasurementsFrequency measurementsFrequency, Boolean activeState) {
         return sensorRepository.findAllByMeasurementsFrequencyAndIsActive(measurementsFrequency, activeState);
     }
 
-    public Optional<Place> findPlaceBySensor(Sensor sensor) {
-        return placeRepository.findById(sensor.getActualPosition().getId());
-    }
-
-    public List<Sensor> findAllByLastMeasurment(LocalDateTime lastMeasurment) {
-        return sensorRepository.findAllByLastMeasurment(lastMeasurment);
-    }
-
-    public List<Sensor> findAllByActualPosition(Place actualPosition) {
-        return sensorRepository.findAllByActualPosition(actualPosition);
-    }
-
-    public List<Sensor> findAllByMeasurementTypeAndMeasurementsFrequency(MeasurementType measurementType, MeasurementsFrequency measurementsFrequency) {
-        if (measurementType != null && measurementsFrequency == null) {
-            return sensorRepository.findAllByMeasurementType(measurementType);
-
-        } else if (measurementType == null && measurementsFrequency != null) {
-            return sensorRepository.findAllByMeasurementsFrequency(measurementsFrequency);
-
-        } else if (measurementType != null && measurementsFrequency != null) {
-            return sensorRepository.findAllByMeasurementTypeAndMeasurementsFrequency(measurementType, measurementsFrequency);
-
+    public List<Sensor> findAndFilterAll(MeasurementType measurementType, MeasurementsFrequency measurementsFrequency, Boolean isActive, Integer limit, Integer page) {
+        List<Sensor> result;
+        if (measurementType != null && measurementsFrequency != null) {
+            result = sensorRepository.findAllByMeasurementTypeAndMeasurementsFrequency(measurementType, measurementsFrequency);
+        } else if ((measurementType == null && measurementsFrequency != null) || (measurementType != null && measurementsFrequency == null)) {
+            result = sensorRepository.findAllByMeasurementTypeOrMeasurementsFrequency(measurementType, measurementsFrequency);
         } else {
-            return sensorRepository.findAll();
+            result = sensorRepository.findAll();
         }
-    }
 
-    public List<Sensor> sortByLastMeasurements(List<Sensor> sensors) {
-        Collections.sort(sensors, new Comparator<Sensor>() {
-            @Override
-            public int compare(Sensor o1, Sensor o2) {
-                return o2.getLastMeasurment().compareTo(o1.getLastMeasurment());
-            }
-        });
-        return sensors;
+        if (isActive != null) {
+            result = result.stream().filter(sensor -> sensor.getIsActive() == isActive).collect(Collectors.toList());
+        }
+
+//        result.sort((o1, o2) -> o2.getLastMeasurment().compareTo(o1.getLastMeasurment()));
+
+        return getPageInLimit(result, limit, page);
     }
 
     public List<Sensor> getPageInLimit(List<Sensor> list, Integer limit, Integer page) {
@@ -91,6 +72,11 @@ public class SensorService {
             list = List.of();
         }
         return list;
+    }
+
+    public Place findPlace(Long id) {
+        return placeRepository.findById(id)
+                .orElse(null);
     }
 
     @Transactional

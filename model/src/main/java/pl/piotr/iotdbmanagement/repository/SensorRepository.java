@@ -12,16 +12,12 @@ import java.util.Optional;
 
 public interface SensorRepository extends JpaRepository<Sensor, Long> {
 
-    List<Sensor> findAllByMeasurementsFrequency(MeasurementsFrequency measurementsFrequency);
-
     List<Sensor> findAllByMeasurementsFrequencyAndIsActive(MeasurementsFrequency measurementsFrequency, Boolean activeState);
-
-    List<Sensor> findAllByMeasurementType(MeasurementType measurementType);
 
     List<Sensor> findAllByMeasurementTypeAndMeasurementsFrequency(MeasurementType measurementType, MeasurementsFrequency measurementsFrequency);
 
-    List<Sensor> findAllByActualPosition(Place actualPosition);
+    List<Sensor> findAllByMeasurementTypeOrMeasurementsFrequency(MeasurementType measurementType, MeasurementsFrequency measurementsFrequency);
 
-    List<Sensor> findAllByLastMeasurment(LocalDateTime dateTime);
+    Optional<Sensor> findBySocket(String socket);
 
 }
