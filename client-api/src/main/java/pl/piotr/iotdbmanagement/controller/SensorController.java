@@ -8,6 +8,7 @@ import pl.piotr.iotdbmanagement.dto.sensor.CreateSensorRequest;
 import pl.piotr.iotdbmanagement.dto.sensor.GetSensorResponse;
 import pl.piotr.iotdbmanagement.dto.sensor.GetSensorsResponse;
 import pl.piotr.iotdbmanagement.dto.sensor.UpdateSensorRequest;
+import pl.piotr.iotdbmanagement.entity.Measurement;
 import pl.piotr.iotdbmanagement.entity.Place;
 import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
@@ -17,6 +18,7 @@ import pl.piotr.iotdbmanagement.service.SensorService;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
@@ -81,6 +83,18 @@ public class SensorController {
             return ResponseEntity.accepted().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteSensor(@PathVariable("id") Long id) {
+        logger.info(MessageFormat.format("DELETE sensor, id: {0}", id));
+        Optional<Sensor> sensorOptional = sensorService.find(id);
+        if (sensorOptional.isPresent()) {
+            sensorService.delete(sensorOptional.get().getId());
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

@@ -14,10 +14,10 @@ public interface MeasurementRepository extends JpaRepository<Measurement, UUID> 
 
     List<Measurement> findAllByPlace(Place place);
 
-    List<Measurement> findAllByDate(LocalDateTime dateTime);
-
     List<Measurement> findAllBySensor(Sensor sensor);
 
-    List<Measurement> findAllBySensor_MeasurementType(MeasurementType measurementType);
+    List<Measurement> findAllBySensorAndPlace(Sensor sensor, Place place);
+
+    List<Measurement> findAllByMeasurementType(MeasurementType measurementType);
 
 }

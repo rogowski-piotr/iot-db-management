@@ -3,6 +3,7 @@ package pl.piotr.iotdbmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.piotr.iotdbmanagement.entity.Measurement;
 import pl.piotr.iotdbmanagement.entity.Place;
 import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
@@ -52,12 +53,18 @@ public class SensorService {
             result = result.stream().filter(sensor -> sensor.getIsActive() == isActive).collect(Collectors.toList());
         }
 
-//        result.sort((o1, o2) -> o2.getLastMeasurment().compareTo(o1.getLastMeasurment()));
+        result.sort((o1, o2) -> {
+            if (o1.getLastMeasurment() != null && o2.getLastMeasurment() != null) {
+                return o1.getLastMeasurment().compareTo(o2.getLastMeasurment());
+            } else {
+                return 1;
+            }
+        });
 
         return getPageInLimit(result, limit, page);
     }
 
-    public List<Sensor> getPageInLimit(List<Sensor> list, Integer limit, Integer page) {
+    private List<Sensor> getPageInLimit(List<Sensor> list, Integer limit, Integer page) {
         if (limit == null) {
             limit = 10;
         }
@@ -87,6 +94,11 @@ public class SensorService {
     @Transactional
     public Sensor create(Sensor sensor) {
         return sensorRepository.save(sensor);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        sensorRepository.deleteById(id);
     }
 
 }
