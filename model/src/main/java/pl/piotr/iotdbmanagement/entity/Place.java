@@ -23,17 +23,17 @@ public class Place implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "description", length = 25)
+    @Column(name = "description", length = 25, nullable = false, unique = true)
     private String description;
 
     @Column(name = "position_x")
-    private int positionX;
+    private Integer positionX;
 
     @Column(name = "position_y")
-    private int positionY;
+    private Integer positionY;
 
     @Column(name = "position_z")
-    private int positionZ;
+    private Integer positionZ;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
