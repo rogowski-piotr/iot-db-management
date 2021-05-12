@@ -6,7 +6,6 @@ import pl.piotr.iotdbmanagement.entity.Place;
 import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,4 +19,5 @@ public interface MeasurementRepository extends JpaRepository<Measurement, UUID> 
 
     List<Measurement> findAllByMeasurementType(MeasurementType measurementType);
 
+    void deleteAllByPlaceIsNullAndSensorIsNull();
 }

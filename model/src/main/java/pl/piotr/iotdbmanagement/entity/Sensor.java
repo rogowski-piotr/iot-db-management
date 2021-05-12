@@ -52,6 +52,11 @@ public class Sensor implements Serializable {
     @OneToMany(mappedBy = "sensor", fetch = FetchType.LAZY)
     private List<Measurement> measurements;
 
+    @PreRemove
+    private void preRemove() {
+        measurements.forEach(measurement -> measurement.setSensor(null));
+    }
+
     public String getAddress() {
         StringBuilder address = new StringBuilder();
         for (char ch : this.socket.toCharArray()) {

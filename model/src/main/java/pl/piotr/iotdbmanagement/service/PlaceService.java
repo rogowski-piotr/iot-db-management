@@ -4,52 +4,55 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.piotr.iotdbmanagement.entity.Place;
+import pl.piotr.iotdbmanagement.repository.MeasurementRepository;
 import pl.piotr.iotdbmanagement.repository.PlaceRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class PlaceService {
 
-    private PlaceRepository repository;
+    private PlaceRepository placeRepository;
+
+    private MeasurementRepository measurementRepository;
 
     @Autowired
-    public PlaceService(PlaceRepository repository) {
-        this.repository = repository;
+    public PlaceService(PlaceRepository placeRepository, MeasurementRepository measurementRepository) {
+        this.placeRepository = placeRepository;
+        this.measurementRepository = measurementRepository;
     }
 
     public List<Place> findAll() {
-        return repository.findAll();
+        return placeRepository.findAll();
     }
 
     public Optional<Place> find(Long id) {
-        return repository.findById(id);
+        return placeRepository.findById(id);
     }
 
     @Transactional
     public Place create(Place place) {
-        return repository.save(place);
+        return placeRepository.save(place);
     }
 
     @Transactional
     public Place update(Place place) {
-        return repository.save(place);
+        return placeRepository.save(place);
     }
 
     @Transactional
     public void delete(Long id) {
-        repository.deleteById(id);
+        placeRepository.deleteById(id);
+        measurementRepository.deleteAllByPlaceIsNullAndSensorIsNull();
     }
 
     public boolean isUniqueDescription(String newDescription) {
-        return repository.findByDescription(newDescription).isEmpty();
+        return placeRepository.findByDescription(newDescription).isEmpty();
     }
 
     public boolean isUniqueDescription(Place actualPlace, String newDescription) {
-        List<Place> allPlacesWithThisDescription = repository.findAllByDescription(newDescription);
+        List<Place> allPlacesWithThisDescription = placeRepository.findAllByDescription(newDescription);
         return allPlacesWithThisDescription.stream().noneMatch(place -> !actualPlace.equals(place));
     }
 

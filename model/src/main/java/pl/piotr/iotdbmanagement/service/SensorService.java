@@ -3,11 +3,11 @@ package pl.piotr.iotdbmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.piotr.iotdbmanagement.entity.Measurement;
 import pl.piotr.iotdbmanagement.entity.Place;
 import pl.piotr.iotdbmanagement.entity.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.repository.MeasurementRepository;
 import pl.piotr.iotdbmanagement.repository.PlaceRepository;
 import pl.piotr.iotdbmanagement.repository.SensorRepository;
 
@@ -21,10 +21,13 @@ public class SensorService {
 
     private PlaceRepository placeRepository;
 
+    private MeasurementRepository measurementRepository;
+
     @Autowired
-    public SensorService(SensorRepository sensorRepository, PlaceRepository placeRepository) {
+    public SensorService(SensorRepository sensorRepository, PlaceRepository placeRepository, MeasurementRepository measurementRepository) {
         this.sensorRepository = sensorRepository;
         this.placeRepository = placeRepository;
+        this.measurementRepository = measurementRepository;
     }
 
     public Optional<Sensor> find(Long id) {
@@ -99,6 +102,7 @@ public class SensorService {
     @Transactional
     public void delete(Long id) {
         sensorRepository.deleteById(id);
+        measurementRepository.deleteAllByPlaceIsNullAndSensorIsNull();
     }
 
 }

@@ -43,4 +43,10 @@ public class Place implements Serializable {
     @OneToMany(mappedBy = "actualPosition", fetch = FetchType.LAZY)
     private List<Sensor> sensors;
 
+    @PreRemove
+    private void preRemove() {
+        sensors.forEach(sensor -> sensor.setActualPosition(null));
+        measurements.forEach(measurement -> measurement.setPlace(null));
+    }
+
 }
