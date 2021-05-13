@@ -6,9 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.piotr.iotdbmanagement.dto.measurment.GetMeasurementResponse;
 import pl.piotr.iotdbmanagement.dto.measurment.GetMeasurementsResponse;
-import pl.piotr.iotdbmanagement.dto.sensor.GetSensorResponse;
-import pl.piotr.iotdbmanagement.entity.Measurement;
-import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.measurement.Measurement;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.service.MeasurementService;
 
@@ -20,7 +18,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/measurement")
+@RequestMapping("api/measurements")
 public class MeasurementController {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private MeasurementService measurementService;

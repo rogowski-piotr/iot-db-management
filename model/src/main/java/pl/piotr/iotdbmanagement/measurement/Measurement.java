@@ -1,7 +1,9 @@
-package pl.piotr.iotdbmanagement.entity;
+package pl.piotr.iotdbmanagement.measurement;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.piotr.iotdbmanagement.place.Place;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
 import javax.persistence.*;

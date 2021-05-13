@@ -1,7 +1,7 @@
 package pl.piotr.iotdbmanagement.dto.place;
 
 import lombok.*;
-import pl.piotr.iotdbmanagement.entity.Place;
+import pl.piotr.iotdbmanagement.place.Place;
 
 import java.util.function.Function;
 
@@ -22,7 +22,7 @@ public class CreatePlaceRequest {
 
     private Integer positionZ;
 
-    public static Function<CreatePlaceRequest, pl.piotr.iotdbmanagement.entity.Place> dtoToEntityMapper() {
+    public static Function<CreatePlaceRequest, Place> dtoToEntityMapper() {
         return request ->
                 Place.builder()
                         .description(request.getDescription())

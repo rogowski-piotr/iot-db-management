@@ -8,9 +8,8 @@ import pl.piotr.iotdbmanagement.dto.sensor.CreateSensorRequest;
 import pl.piotr.iotdbmanagement.dto.sensor.GetSensorResponse;
 import pl.piotr.iotdbmanagement.dto.sensor.GetSensorsResponse;
 import pl.piotr.iotdbmanagement.dto.sensor.UpdateSensorRequest;
-import pl.piotr.iotdbmanagement.entity.Measurement;
-import pl.piotr.iotdbmanagement.entity.Place;
-import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.place.Place;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.service.SensorService;
@@ -18,7 +17,6 @@ import pl.piotr.iotdbmanagement.service.SensorService;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController

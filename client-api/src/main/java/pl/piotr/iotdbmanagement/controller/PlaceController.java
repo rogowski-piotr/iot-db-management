@@ -8,7 +8,7 @@ import pl.piotr.iotdbmanagement.dto.place.CreatePlaceRequest;
 import pl.piotr.iotdbmanagement.dto.place.GetPlaceResponse;
 import pl.piotr.iotdbmanagement.dto.place.GetPlacesResponse;
 import pl.piotr.iotdbmanagement.dto.place.UpdatePlaceRequest;
-import pl.piotr.iotdbmanagement.entity.Place;
+import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.service.PlaceService;
 
 import java.text.MessageFormat;

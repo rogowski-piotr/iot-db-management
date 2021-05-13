@@ -1,8 +1,8 @@
 package pl.piotr.iotdbmanagement.dto.sensor;
 
 import lombok.*;
-import pl.piotr.iotdbmanagement.entity.Place;
-import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.place.Place;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 

@@ -1,6 +1,7 @@
 package pl.piotr.iotdbmanagement.dto.sensor;
 
 import lombok.*;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 
 import java.time.LocalDateTime;
 import java.util.function.Function;
@@ -39,7 +40,7 @@ public class GetSensorResponse {
         String description;
     }
 
-    public static Function<pl.piotr.iotdbmanagement.entity.Sensor, GetSensorResponse> entityToDtoMapper() {
+    public static Function<Sensor, GetSensorResponse> entityToDtoMapper() {
         return sensor -> GetSensorResponse.builder()
                 .id(sensor.getId())
                 .socket(sensor.getSocket())

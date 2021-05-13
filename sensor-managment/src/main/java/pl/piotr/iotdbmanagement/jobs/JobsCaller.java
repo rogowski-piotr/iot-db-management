@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.service.MeasurementService;
 import pl.piotr.iotdbmanagement.service.SensorService;
@@ -34,7 +34,7 @@ public class JobsCaller {
         executor = Executors.newFixedThreadPool(MAX_THREAD_NUMBER);
     }
 
-    private void job(MeasurementsFrequency measurementsFrequency) {
+    private void call(MeasurementsFrequency measurementsFrequency) {
         logger.info("Job for: " + measurementsFrequency + " has been started");
         List<Sensor> sensors = sensorService.findAllByMeasurementsFrequencyAndIsActive(measurementsFrequency, true);
         logger.info("Found " + sensors.size() + " elements");
@@ -44,7 +44,7 @@ public class JobsCaller {
     @Async
     @Scheduled(cron = "0 * * * * ?", zone = "Europe/Warsaw")
     public void jobOncePerMinute() {
-        job(MeasurementsFrequency.ONCE_PER_MINUTE);
+        call(MeasurementsFrequency.ONCE_PER_MINUTE);
     }
 
 }

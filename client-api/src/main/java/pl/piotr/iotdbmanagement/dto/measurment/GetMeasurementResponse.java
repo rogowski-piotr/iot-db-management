@@ -2,6 +2,7 @@ package pl.piotr.iotdbmanagement.dto.measurment;
 
 import lombok.*;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
+import pl.piotr.iotdbmanagement.measurement.Measurement;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -52,7 +53,7 @@ public class GetMeasurementResponse {
         String socket;
     }
 
-    public static Function<pl.piotr.iotdbmanagement.entity.Measurement, GetMeasurementResponse> entityToDtoMapper() {
+    public static Function<Measurement, GetMeasurementResponse> entityToDtoMapper() {
         return measurement -> GetMeasurementResponse.builder()
                 .id(measurement.getId())
                 .value(measurement.getValue())

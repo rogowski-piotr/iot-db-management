@@ -3,13 +3,13 @@ package pl.piotr.iotdbmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.piotr.iotdbmanagement.entity.Place;
-import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.place.Place;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
-import pl.piotr.iotdbmanagement.repository.MeasurementRepository;
-import pl.piotr.iotdbmanagement.repository.PlaceRepository;
-import pl.piotr.iotdbmanagement.repository.SensorRepository;
+import pl.piotr.iotdbmanagement.measurement.MeasurementRepository;
+import pl.piotr.iotdbmanagement.place.PlaceRepository;
+import pl.piotr.iotdbmanagement.sensor.SensorRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,10 +36,6 @@ public class SensorService {
 
     public Optional<Sensor> findBySocket(String socket) {
         return sensorRepository.findBySocket(socket);
-    }
-
-    public List<Sensor> findAllByMeasurementsFrequencyAndIsActive(MeasurementsFrequency measurementsFrequency, Boolean activeState) {
-        return sensorRepository.findAllByMeasurementsFrequencyAndIsActive(measurementsFrequency, activeState);
     }
 
     public List<Sensor> findAndFilterAll(MeasurementType measurementType, MeasurementsFrequency measurementsFrequency, Boolean isActive, Integer limit, Integer page) {

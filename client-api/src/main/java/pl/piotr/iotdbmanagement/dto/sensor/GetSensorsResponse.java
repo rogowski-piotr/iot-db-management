@@ -29,7 +29,7 @@ public class GetSensorsResponse {
         private Boolean isActive;
     }
 
-    public static Function<Collection<pl.piotr.iotdbmanagement.entity.Sensor>, Iterable<Sensor>> entityToDtoMapper() {
+    public static Function<Collection<pl.piotr.iotdbmanagement.sensor.Sensor>, Iterable<Sensor>> entityToDtoMapper() {
         return sensors -> {
             return sensors.stream()
                     .map(sensor -> Sensor.builder()

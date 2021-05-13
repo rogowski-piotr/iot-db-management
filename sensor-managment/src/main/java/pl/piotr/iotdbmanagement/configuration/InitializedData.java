@@ -2,9 +2,9 @@ package pl.piotr.iotdbmanagement.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.piotr.iotdbmanagement.entity.Measurement;
-import pl.piotr.iotdbmanagement.entity.Place;
-import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.measurement.Measurement;
+import pl.piotr.iotdbmanagement.place.Place;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.service.MeasurementService;

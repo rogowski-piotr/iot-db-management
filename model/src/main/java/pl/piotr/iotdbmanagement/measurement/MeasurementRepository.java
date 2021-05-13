@@ -1,9 +1,8 @@
-package pl.piotr.iotdbmanagement.repository;
+package pl.piotr.iotdbmanagement.measurement;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.piotr.iotdbmanagement.entity.Measurement;
-import pl.piotr.iotdbmanagement.entity.Place;
-import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.place.Place;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
 import java.util.List;

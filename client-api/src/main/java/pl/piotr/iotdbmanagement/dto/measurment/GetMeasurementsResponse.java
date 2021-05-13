@@ -36,7 +36,7 @@ public class GetMeasurementsResponse {
 
     }
 
-    public static Function<Collection<pl.piotr.iotdbmanagement.entity.Measurement>, Iterable<GetMeasurementsResponse.Measurement>> entityToDtoMapper() {
+    public static Function<Collection<pl.piotr.iotdbmanagement.measurement.Measurement>, Iterable<GetMeasurementsResponse.Measurement>> entityToDtoMapper() {
         return measurements -> {
             return measurements.stream()
                     .map(measurement -> Measurement.builder()

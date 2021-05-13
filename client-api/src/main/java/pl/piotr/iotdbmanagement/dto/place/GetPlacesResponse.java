@@ -21,7 +21,7 @@ public class GetPlacesResponse {
         private String description;
     }
 
-    public static Function<Collection<pl.piotr.iotdbmanagement.entity.Place>, Iterable<GetPlacesResponse.Place>> entityToDtoMapper() {
+    public static Function<Collection<pl.piotr.iotdbmanagement.place.Place>, Iterable<GetPlacesResponse.Place>> entityToDtoMapper() {
         return places -> {
             return places.stream()
                     .map(place -> Place.builder()

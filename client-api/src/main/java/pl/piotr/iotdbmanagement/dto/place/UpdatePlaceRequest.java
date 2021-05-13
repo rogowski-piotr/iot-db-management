@@ -1,6 +1,7 @@
 package pl.piotr.iotdbmanagement.dto.place;
 
 import lombok.*;
+import pl.piotr.iotdbmanagement.place.Place;
 
 import java.util.function.BiFunction;
 
@@ -21,7 +22,7 @@ public class UpdatePlaceRequest {
 
     private Integer positionZ;
 
-    public static BiFunction<pl.piotr.iotdbmanagement.entity.Place, UpdatePlaceRequest, pl.piotr.iotdbmanagement.entity.Place> dtoToEntityUpdater() {
+    public static BiFunction<Place, UpdatePlaceRequest, Place> dtoToEntityUpdater() {
         return (place, request) -> {
             place.setDescription(request.getDescription());
             place.setPositionX(request.getPositionX());

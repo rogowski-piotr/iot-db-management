@@ -1,9 +1,9 @@
 package pl.piotr.iotdbmanagement.jobs;
 
 import com.google.gson.Gson;
-import pl.piotr.iotdbmanagement.entity.Measurement;
+import pl.piotr.iotdbmanagement.measurement.Measurement;
 import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
-import pl.piotr.iotdbmanagement.entity.Sensor;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.service.MeasurementService;
 import pl.piotr.iotdbmanagement.service.SensorService;
 
