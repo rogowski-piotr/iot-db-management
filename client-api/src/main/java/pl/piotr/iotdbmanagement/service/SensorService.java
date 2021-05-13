@@ -81,8 +81,9 @@ public class SensorService {
     }
 
     public Place findPlace(Long id) {
-        return placeRepository.findById(id)
-                .orElse(null);
+        return id != null
+                ? placeRepository.findById(id).orElse(null)
+                : null;
     }
 
     @Transactional

@@ -59,14 +59,22 @@ public class GetMeasurementResponse {
                 .value(measurement.getValue())
                 .measurementType(measurement.getMeasurementType())
                 .date(measurement.getDate())
-                .place(Place.builder()
-                        .id(measurement.getPlace().getId())
-                        .description(measurement.getPlace().getDescription())
-                        .build())
-                .sensor(Sensor.builder()
-                        .id(measurement.getSensor().getId())
-                        .socket(measurement.getSensor().getSocket())
-                        .build())
+                .place(
+                        measurement.getPlace() != null
+                            ? Place.builder()
+                                .id(measurement.getPlace().getId())
+                                .description(measurement.getPlace().getDescription())
+                                .build()
+                            : null
+                )
+                .sensor(
+                        measurement.getSensor() != null
+                        ? Sensor.builder()
+                            .id(measurement.getSensor().getId())
+                            .socket(measurement.getSensor().getSocket())
+                            .build()
+                        : null
+                )
                 .build();
     }
 

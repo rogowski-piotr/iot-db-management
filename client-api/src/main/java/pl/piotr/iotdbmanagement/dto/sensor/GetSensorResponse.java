@@ -49,10 +49,13 @@ public class GetSensorResponse {
                 .measurementsFrequency(sensor.getMeasurementsFrequency().name())
                 .lastMeasurment(sensor.getLastMeasurment())
                 .actualPosition(
-                        Place.builder()
-                        .id(sensor.getActualPosition().getId())
-                        .description(sensor.getActualPosition().getDescription())
-                        .build())
+                    sensor.getActualPosition() != null
+                        ? Place.builder()
+                            .id(sensor.getActualPosition().getId())
+                            .description(sensor.getActualPosition().getDescription())
+                            .build()
+                        : null
+                )
                 .build();
     }
 
