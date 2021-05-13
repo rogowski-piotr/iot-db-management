@@ -1,0 +1,50 @@
+package pl.piotr.iotdbmanagement.measurement;
+
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import pl.piotr.iotdbmanagement.place.Place;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
+import pl.piotr.iotdbmanagement.enums.MeasurementType;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@SuperBuilder
+@Entity
+@Table(name = "measurments")
+public class Measurement implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
+    @Column(name = "value", updatable = false)
+    private Float value;
+
+    @Column(name = "measurment_type")
+    @Enumerated(EnumType.STRING)
+    private MeasurementType measurementType;
+
+    @Column(name = "date")
+    private LocalDateTime date;
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
+    private Place place;
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sensor_id")
+    private Sensor sensor;
+
+}
