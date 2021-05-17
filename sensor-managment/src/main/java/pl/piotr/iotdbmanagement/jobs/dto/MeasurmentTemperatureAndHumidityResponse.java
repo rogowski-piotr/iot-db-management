@@ -2,7 +2,6 @@ package pl.piotr.iotdbmanagement.jobs.dto;
 
 import lombok.*;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
 import java.util.function.BiFunction;
 

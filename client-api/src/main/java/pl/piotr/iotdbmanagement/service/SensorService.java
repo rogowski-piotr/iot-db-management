@@ -3,9 +3,9 @@ package pl.piotr.iotdbmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.measurement.MeasurementRepository;
 import pl.piotr.iotdbmanagement.place.PlaceRepository;
@@ -16,11 +16,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class SensorService {
-
     private SensorRepository sensorRepository;
-
     private PlaceRepository placeRepository;
-
     private MeasurementRepository measurementRepository;
 
     @Autowired

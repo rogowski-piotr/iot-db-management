@@ -1,10 +1,11 @@
 package pl.piotr.iotdbmanagement.dto.sensor;
 
 import lombok.*;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.utils.QuadriFunction;
 import pl.piotr.iotdbmanagement.utils.TriFunction;
 
 @Getter
@@ -20,17 +21,17 @@ public class UpdateSensorRequest {
 
     private Boolean isActive;
 
-    private MeasurementType measurementType;
+    private String measurementType;
 
     private MeasurementsFrequency measurementsFrequency;
 
     private Long actualPosition;
 
-    public static TriFunction<Sensor, UpdateSensorRequest, Place, Sensor> dtoToEntityUpdater() {
-        return (sensor, request, place) -> {
+    public static QuadriFunction<Sensor, UpdateSensorRequest, Place, MeasurementType, Sensor> dtoToEntityUpdater() {
+        return (sensor, request, place, measurementType) -> {
             sensor.setSocket(request.getSocket());
             sensor.setIsActive(request.getIsActive());
-            sensor.setMeasurementType(request.getMeasurementType());
+            sensor.setMeasurementType(measurementType);
             sensor.setMeasurementsFrequency(request.getMeasurementsFrequency());
             sensor.setActualPosition(place);
             return sensor;

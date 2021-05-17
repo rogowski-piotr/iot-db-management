@@ -2,9 +2,9 @@ package pl.piotr.iotdbmanagement.measurement;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,12 +30,16 @@ public class Measurement implements Serializable {
     @Column(name = "value", updatable = false)
     private Float value;
 
-    @Column(name = "measurment_type")
-    @Enumerated(EnumType.STRING)
-    private MeasurementType measurementType;
-
     @Column(name = "date")
     private LocalDateTime date;
+
+/*    @Column(name = "measurement_type")
+    private String measurementType;*/
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "measurement_type_id")
+    private MeasurementType measurementType;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

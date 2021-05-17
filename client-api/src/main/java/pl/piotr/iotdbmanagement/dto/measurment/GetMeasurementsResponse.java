@@ -1,7 +1,7 @@
 package pl.piotr.iotdbmanagement.dto.measurment;
 
 import lombok.*;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -30,7 +30,7 @@ public class GetMeasurementsResponse {
 
         private Float value;
 
-        private MeasurementType measurementType;
+        private String measurementType;
 
         private LocalDateTime date;
 
@@ -42,7 +42,7 @@ public class GetMeasurementsResponse {
                     .map(measurement -> Measurement.builder()
                             .id(measurement.getId())
                             .value(measurement.getValue())
-                            .measurementType(measurement.getMeasurementType())
+                            .measurementType(measurement.getMeasurementType().getType())
                             .date(measurement.getDate())
                             .build())
                     .collect(Collectors.toList());
