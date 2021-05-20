@@ -41,11 +41,8 @@ public class Sensor implements Serializable {
     @Column(name = "last_measurment")
     private LocalDateTime lastMeasurment;
 
-    /*@Column(name = "measurement_type")
-    private String measurementType;*/
-
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "measurement_type_id")
     private MeasurementType measurementType;
 

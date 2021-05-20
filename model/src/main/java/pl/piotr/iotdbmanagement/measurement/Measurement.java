@@ -33,11 +33,8 @@ public class Measurement implements Serializable {
     @Column(name = "date")
     private LocalDateTime date;
 
-/*    @Column(name = "measurement_type")
-    private String measurementType;*/
-
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "measurement_type_id")
     private MeasurementType measurementType;
 

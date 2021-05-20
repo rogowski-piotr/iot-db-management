@@ -53,13 +53,17 @@ public class Job implements Runnable {
                 .date(LocalDateTime.now())
                 .sensor(sensor)
                 .place(sensor.getActualPosition())
+                .measurementType(sensor.getMeasurementType())
                 .build();
 
-        switch (sensor.getMeasurementType()) {
-            case TEMPERATURE_AND_HUMIDITY:
+        logger.info("type: " + sensor.getMeasurementType().getType());
+
+        switch (sensor.getMeasurementType().getType()) {
+            case "TEMPERATURE_AND_HUMIDITY":
+                logger.info("type classified as TEMPERATURE_AND_HUMIDITY");
                 MeasurmentTemperatureAndHumidityResponse responseObject = new Gson()
                         .fromJson(response, MeasurmentTemperatureAndHumidityResponse.class);
-                if ((boolean)sensor.getIsActive() != (boolean)responseObject.getActive()) {
+                if ((boolean) sensor.getIsActive() != (boolean) responseObject.getActive()) {
                     sensor.setIsActive(responseObject.getActive());
                     sensorService.update(sensor);
                     if (!sensor.getIsActive()) return;
@@ -72,13 +76,16 @@ public class Job implements Runnable {
                                 .dtoToEntityHumidityMapper().apply(responseObject, infoObject));
                 break;
 
-            case TEMPERATURE:
+            case "TEMPERATURE":
+                logger.info("type classified as TEMPERATURE");
                 break;
 
-            case HUMIDITY:
+            case "HUMIDITY":
+                logger.info("type classified as HUMIDITY");
                 break;
 
             default:
+                logger.info("type not classified");
                 return;
         }
 
