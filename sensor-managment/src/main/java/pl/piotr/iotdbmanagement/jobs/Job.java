@@ -5,6 +5,7 @@ import pl.piotr.iotdbmanagement.measurement.Measurement;
 import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.service.MeasurementService;
+import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
 import pl.piotr.iotdbmanagement.service.SensorService;
 
 import java.io.BufferedReader;
@@ -17,17 +18,18 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class Job implements Runnable {
-
     private Logger logger;
     private Sensor sensor;
     private MeasurementService measurementService;
     private SensorService sensorService;
+    private MeasurementTypeService measurementTypeService;
 
-    protected Job(Sensor sensor, MeasurementService measurementService, SensorService sensorService) {
+    protected Job(Sensor sensor, MeasurementService measurementService, SensorService sensorService, MeasurementTypeService measurementTypeService) {
         logger = Logger.getLogger("sensor at: " + sensor.getSocket());
         this.sensor = sensor;
         this.measurementService = measurementService;
         this.sensorService = sensorService;
+        this.measurementTypeService = measurementTypeService;
     }
 
     @Override
@@ -55,30 +57,38 @@ public class Job implements Runnable {
                 .place(sensor.getActualPosition())
                 .build();
 
-        switch (sensor.getMeasurementType()) {
-            case TEMPERATURE_AND_HUMIDITY:
+        logger.info("type: " + sensor.getMeasurementType().getType());
+
+        switch (sensor.getMeasurementType().getType()) {
+            case "TEMPERATURE_AND_HUMIDITY":
+                logger.info("type classified as TEMPERATURE_AND_HUMIDITY");
                 MeasurmentTemperatureAndHumidityResponse responseObject = new Gson()
                         .fromJson(response, MeasurmentTemperatureAndHumidityResponse.class);
-                if ((boolean)sensor.getIsActive() != (boolean)responseObject.getActive()) {
+                if ((boolean) sensor.getIsActive() != (boolean) responseObject.getActive()) {
                     sensor.setIsActive(responseObject.getActive());
                     sensorService.update(sensor);
                     if (!sensor.getIsActive()) return;
                 }
+                infoObject.setMeasurementType(measurementTypeService.getTypeOfString("TEMPERATURE"));
                 measurements.add(
                         MeasurmentTemperatureAndHumidityResponse
                                 .dtoToEntityTemperatureMapper().apply(responseObject, infoObject));
+                infoObject.setMeasurementType(measurementTypeService.getTypeOfString("HUMIDITY"));
                 measurements.add(
                         MeasurmentTemperatureAndHumidityResponse
                                 .dtoToEntityHumidityMapper().apply(responseObject, infoObject));
                 break;
 
-            case TEMPERATURE:
+            case "TEMPERATURE":
+                logger.info("type classified as TEMPERATURE");
                 break;
 
-            case HUMIDITY:
+            case "HUMIDITY":
+                logger.info("type classified as HUMIDITY");
                 break;
 
             default:
+                logger.info("type not classified");
                 return;
         }
 

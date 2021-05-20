@@ -8,10 +8,11 @@ import pl.piotr.iotdbmanagement.dto.sensor.CreateSensorRequest;
 import pl.piotr.iotdbmanagement.dto.sensor.GetSensorResponse;
 import pl.piotr.iotdbmanagement.dto.sensor.GetSensorsResponse;
 import pl.piotr.iotdbmanagement.dto.sensor.UpdateSensorRequest;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
 import pl.piotr.iotdbmanagement.service.SensorService;
 
 import java.text.MessageFormat;
@@ -24,20 +25,26 @@ import java.util.logging.Logger;
 public class SensorController {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private SensorService sensorService;
+    private MeasurementTypeService measurementTypeService;
 
     @Autowired
-    public SensorController(SensorService sensorService) {
+    public SensorController(SensorService sensorService, MeasurementTypeService measurementTypeService) {
         this.sensorService = sensorService;
+        this.measurementTypeService = measurementTypeService;
     }
 
     @GetMapping
     public ResponseEntity<Iterable<GetSensorsResponse.Sensor>> getAllSensors(@RequestParam(required = false, name = "item_limit") Integer itemLimit,
                                                                              @RequestParam(required = false, name = "page") Integer page,
-                                                                             @RequestParam(required = false, name = "measurement_type") MeasurementType measurementType,
+                                                                             @RequestParam(required = false, name = "measurement_type") String measurementType,
                                                                              @RequestParam(required = false, name = "measurement_frequency") MeasurementsFrequency measurementsFrequency,
                                                                              @RequestParam(required = false, name = "isActive") Boolean isActive) {
         logger.info(MessageFormat.format("GET all sensors, item_limit: {0}, page: {1}, measurement_type: {2}, measurement_frequency: {3}, isActive {4}", itemLimit, page, measurementType, measurementsFrequency, isActive));
-        List<Sensor> resultList = sensorService.findAndFilterAll(measurementType, measurementsFrequency, isActive, itemLimit, page);
+        if ((measurementType != null) && (!measurementTypeService.exist(measurementType))) {
+            return ResponseEntity.badRequest().build();
+        }
+        MeasurementType type = measurementTypeService.getTypeOfString(measurementType);
+        List<Sensor> resultList = sensorService.findAndFilterAll(type, measurementsFrequency, isActive, itemLimit, page);
         return resultList.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(GetSensorsResponse.entityToDtoMapper().apply(resultList));
@@ -54,13 +61,14 @@ public class SensorController {
 
     @PostMapping
     public ResponseEntity<Void> createSensor(@RequestBody CreateSensorRequest request, UriComponentsBuilder builder) {
-        logger.info("CREATE");
+        logger.info("CREATE" + request.getMeasurementType());
         Optional<Sensor> newSensor = sensorService.findBySocket(request.getSocket());
-        Place newPosition = sensorService.findPlace(request.getActualPositionPlaceId());
-        if (newSensor.isEmpty() && newPosition != null) {
+        Place place = sensorService.findPlace(request.getActualPositionPlaceId());
+        MeasurementType type = measurementTypeService.getTypeOfString(request.getMeasurementType());
+        if (newSensor.isEmpty() && place != null && type != null) {
             Sensor sensor = CreateSensorRequest
                     .dtoToEntityMapper()
-                    .apply(request, newPosition);
+                    .apply(request, place, type);
             sensorService.create(sensor);
             return ResponseEntity.created(builder.pathSegment("api", "sensors")
                     .buildAndExpand(sensor.getId()).toUri()).build();
@@ -73,10 +81,11 @@ public class SensorController {
         logger.info("UPDATE");
         Optional<Sensor> sensor = sensorService.find(id);
         Place newPosition = sensorService.findPlace(request.getActualPosition());
-        if (sensor.isPresent() && newPosition != null) {
+        MeasurementType type = measurementTypeService.getTypeOfString(request.getMeasurementType());
+        if (sensor.isPresent() && newPosition != null && type != null) {
             UpdateSensorRequest
                     .dtoToEntityUpdater()
-                    .apply(sensor.get(), request, newPosition);
+                    .apply(sensor.get(), request, newPosition, type);
             sensorService.update(sensor.get());
             return ResponseEntity.accepted().build();
         }

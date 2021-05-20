@@ -1,8 +1,8 @@
 package pl.piotr.iotdbmanagement.sensor;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 
 import java.util.List;
 import java.util.Optional;

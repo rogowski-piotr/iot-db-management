@@ -2,7 +2,6 @@ package pl.piotr.iotdbmanagement.jobs.dto;
 
 import lombok.*;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
 
 import java.util.function.BiFunction;
 
@@ -26,7 +25,7 @@ public class MeasurmentTemperatureAndHumidityResponse {
     public static BiFunction<MeasurmentTemperatureAndHumidityResponse, Measurement, Measurement> dtoToEntityTemperatureMapper() {
         return (responseObj, infoObj) -> Measurement.builder()
                 .value(responseObj.getTemperature())
-                .measurementType(MeasurementType.TEMPERATURE)
+                .measurementType(infoObj.getMeasurementType())
                 .date(infoObj.getDate())
                 .sensor(infoObj.getSensor())
                 .place(infoObj.getPlace())
@@ -36,7 +35,7 @@ public class MeasurmentTemperatureAndHumidityResponse {
     public static BiFunction<MeasurmentTemperatureAndHumidityResponse, Measurement, Measurement> dtoToEntityHumidityMapper() {
         return (responseObj, infoObj) -> Measurement.builder()
                 .value(responseObj.getHumidity())
-                .measurementType(MeasurementType.HUMIDITY)
+                .measurementType(infoObj.getMeasurementType())
                 .date(infoObj.getDate())
                 .sensor(infoObj.getSensor())
                 .place(infoObj.getPlace())

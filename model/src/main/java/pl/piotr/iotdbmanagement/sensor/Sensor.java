@@ -2,9 +2,9 @@ package pl.piotr.iotdbmanagement.sensor;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
-import pl.piotr.iotdbmanagement.enums.MeasurementType;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
 
 import javax.persistence.*;
@@ -34,16 +34,17 @@ public class Sensor implements Serializable {
     @Column(name = "active")
     private Boolean isActive;
 
-    @Column(name = "measurment_type")
-    @Enumerated(EnumType.STRING)
-    private MeasurementType measurementType;
-
     @Column(name = "measurement_frequency")
     @Enumerated(EnumType.STRING)
     private MeasurementsFrequency measurementsFrequency;
 
     @Column(name = "last_measurment")
     private LocalDateTime lastMeasurment;
+
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "measurement_type_id")
+    private MeasurementType measurementType;
 
     @ToString.Exclude
     @ManyToOne
