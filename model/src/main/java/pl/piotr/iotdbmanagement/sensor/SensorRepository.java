@@ -12,7 +12,9 @@ public interface SensorRepository extends MongoRepository <Sensor, String> {
 
     List<Sensor> findAllByMeasurementTypeAndMeasurementsFrequency(String measurementType, MeasurementsFrequency measurementsFrequency);
 
-    List<Sensor> findAllByMeasurementTypeOrMeasurementsFrequency(String measurementType, MeasurementsFrequency measurementsFrequency);
+    List<Sensor> findAllByMeasurementType(String measurementType);
+
+    List<Sensor> findAllByMeasurementsFrequency(MeasurementsFrequency measurementsFrequency);
 
     Optional<Sensor> findBySocket(String socket);
 

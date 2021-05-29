@@ -39,8 +39,10 @@ public class SensorService {
         List<Sensor> result;
         if (measurementType != null && measurementsFrequency != null) {
             result = sensorRepository.findAllByMeasurementTypeAndMeasurementsFrequency(measurementType.getType(), measurementsFrequency);
-        } else if ((measurementType == null && measurementsFrequency != null) || (measurementType != null && measurementsFrequency == null)) {
-            result = sensorRepository.findAllByMeasurementTypeOrMeasurementsFrequency(measurementType.getType(), measurementsFrequency);
+        } else if (measurementType == null && measurementsFrequency != null) {
+            result = sensorRepository.findAllByMeasurementsFrequency(measurementsFrequency);
+        } else if (measurementType != null && measurementsFrequency == null) {
+            result = sensorRepository.findAllByMeasurementType(measurementType.getType());
         } else {
             result = sensorRepository.findAll();
         }
