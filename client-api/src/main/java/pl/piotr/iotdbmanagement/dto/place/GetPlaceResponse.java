@@ -14,7 +14,7 @@ import java.util.function.Function;
 @EqualsAndHashCode
 public class GetPlaceResponse {
 
-    private Long id;
+    private String id;
 
     private String description;
 

@@ -52,8 +52,8 @@ public class MeasurementController {
     public ResponseEntity<Iterable<GetMeasurementsResponse.Measurement>> getAllMeasurements(@RequestParam(required = false, name = "item_limit") Integer itemLimit,
                                                                                             @RequestParam(required = false, name = "page") Integer page,
                                                                                             @RequestParam(required = false, name = "measurement_type") String measurementType,
-                                                                                            @RequestParam(required = false, name = "sensor_id") Long sensorId,
-                                                                                            @RequestParam(required = false, name = "place_id") Long placeId,
+                                                                                            @RequestParam(required = false, name = "sensor_id") String sensorId,
+                                                                                            @RequestParam(required = false, name = "place_id") String placeId,
                                                                                             @RequestParam(required = false, name = "date_from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTimeFrom,
                                                                                             @RequestParam(required = false, name = "date_to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTimeTo) {
         logger.info(MessageFormat.format("GET all measurements, item_limit: {0}, page: {1}, measurement_type: {2}, sensorId {3}, placeId {4}, dateTimeFrom {5}, dateTimeTo {6}",
@@ -69,7 +69,7 @@ public class MeasurementController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<GetMeasurementResponse> getSingleSensor(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<GetMeasurementResponse> getSingleSensor(@PathVariable(name = "id") String id) {
         logger.info("GET single , id: " + id);
         Optional<Measurement> measurementOptional = measurementService.findOne(id);
         return measurementOptional
@@ -87,7 +87,7 @@ public class MeasurementController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteMeasurement(@PathVariable("id") UUID id) {
+    public ResponseEntity<Void> deleteMeasurement(@PathVariable("id") String id) {
         logger.info(MessageFormat.format("DELETE measurement, id: {0}", id));
         Optional<Measurement> measurementOptional = measurementService.findOne(id);
         if (measurementOptional.isPresent()) {

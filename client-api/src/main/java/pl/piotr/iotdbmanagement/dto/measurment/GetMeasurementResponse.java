@@ -2,7 +2,6 @@ package pl.piotr.iotdbmanagement.dto.measurment;
 
 import lombok.*;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
-import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,7 +16,7 @@ import java.util.function.Function;
 @EqualsAndHashCode
 public class GetMeasurementResponse {
 
-    private UUID id;
+    private String id;
 
     private Float value;
 
@@ -36,7 +35,7 @@ public class GetMeasurementResponse {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @ToString
     private static class Place {
-        Long id;
+        String id;
 
         String description;
     }
@@ -48,7 +47,7 @@ public class GetMeasurementResponse {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @ToString
     private static class Sensor {
-        Long id;
+        String id;
 
         String socket;
     }
@@ -57,7 +56,7 @@ public class GetMeasurementResponse {
         return measurement -> GetMeasurementResponse.builder()
                 .id(measurement.getId())
                 .value(measurement.getValue())
-                .measurementType(measurement.getMeasurementType().getType())
+                .measurementType(measurement.getMeasurementType())
                 .date(measurement.getDate())
                 .place(
                         measurement.getPlace() != null

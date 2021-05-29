@@ -22,7 +22,7 @@ public class GetSensorsResponse {
     @ToString
     @EqualsAndHashCode
     public static class Sensor {
-        private Long id;
+        private String id;
 
         private String socket;
 

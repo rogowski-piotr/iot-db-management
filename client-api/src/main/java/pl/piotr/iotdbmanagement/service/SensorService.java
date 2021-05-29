@@ -3,12 +3,12 @@ package pl.piotr.iotdbmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
-import pl.piotr.iotdbmanagement.place.Place;
-import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.measurement.MeasurementRepository;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
+import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.place.PlaceRepository;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.sensor.SensorRepository;
 
 import java.util.*;
@@ -27,7 +27,7 @@ public class SensorService {
         this.measurementRepository = measurementRepository;
     }
 
-    public Optional<Sensor> find(Long id) {
+    public Optional<Sensor> find(String id) {
         return sensorRepository.findById(id);
     }
 
@@ -38,9 +38,9 @@ public class SensorService {
     public List<Sensor> findAndFilterAll(MeasurementType measurementType, MeasurementsFrequency measurementsFrequency, Boolean isActive, Integer limit, Integer page) {
         List<Sensor> result;
         if (measurementType != null && measurementsFrequency != null) {
-            result = sensorRepository.findAllByMeasurementTypeAndMeasurementsFrequency(measurementType, measurementsFrequency);
+            result = sensorRepository.findAllByMeasurementTypeAndMeasurementsFrequency(measurementType.getType(), measurementsFrequency);
         } else if ((measurementType == null && measurementsFrequency != null) || (measurementType != null && measurementsFrequency == null)) {
-            result = sensorRepository.findAllByMeasurementTypeOrMeasurementsFrequency(measurementType, measurementsFrequency);
+            result = sensorRepository.findAllByMeasurementTypeOrMeasurementsFrequency(measurementType.getType(), measurementsFrequency);
         } else {
             result = sensorRepository.findAll();
         }
@@ -77,7 +77,7 @@ public class SensorService {
         return list;
     }
 
-    public Place findPlace(Long id) {
+    public Place findPlace(String id) {
         return id != null
                 ? placeRepository.findById(id).orElse(null)
                 : null;
@@ -94,7 +94,7 @@ public class SensorService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(String id) {
         sensorRepository.deleteById(id);
         measurementRepository.deleteAllByPlaceIsNullAndSensorIsNull();
     }

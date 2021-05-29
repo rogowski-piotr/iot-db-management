@@ -16,7 +16,7 @@ public class GetPlacesResponse {
     @ToString
     @EqualsAndHashCode
     public static class Place {
-        private Long id;
+        private String id;
 
         private String description;
     }
