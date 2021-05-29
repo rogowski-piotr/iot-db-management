@@ -2,50 +2,42 @@ package pl.piotr.iotdbmanagement.measurement;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 @EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder
-@Entity
-@Table(name = "measurments")
+@Document(collection = "measurements")
 public class Measurement implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+    private String id;
 
-    @Column(name = "value", updatable = false)
+    @NotNull
     private Float value;
 
-    @Column(name = "date")
     private LocalDateTime date;
 
-    @ToString.Exclude
-    @ManyToOne
-    @JoinColumn(name = "measurement_type_id")
-    private MeasurementType measurementType;
+    @NotBlank
+    private String measurementType;
 
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id")
-    private Place place;
-
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sensor_id")
+    @DBRef
     private Sensor sensor;
+
+    @DBRef
+    private Place place;
 
 }

@@ -2,38 +2,26 @@ package pl.piotr.iotdbmanagement.measurementtype;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.piotr.iotdbmanagement.measurement.Measurement;
-import pl.piotr.iotdbmanagement.sensor.Sensor;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 @EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder
-@Entity
-@Table(name = "measurments_type")
+@Document
 public class MeasurementType implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    Long id;
+    String id;
 
-    @Column(name = "type", updatable = false, nullable = false, unique = true)
+    @NotBlank
     String type;
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "measurementType", fetch = FetchType.LAZY)
-    private List<Measurement> measurements;
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "measurementType", fetch = FetchType.LAZY)
-    private List<Sensor> sensors;
 
 }

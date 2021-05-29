@@ -2,12 +2,15 @@ package pl.piotr.iotdbmanagement.sensor;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
-import pl.piotr.iotdbmanagement.place.Place;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
+import pl.piotr.iotdbmanagement.place.Place;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,50 +18,40 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 @EqualsAndHashCode
-@Entity
-@Table(name = "sensors")
+@Document(collection = "sensors")
 public class Sensor implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    private String id;
 
-    @Column(name = "socket")
+    @NotBlank
     private String socket;
 
-    @Column(name = "active")
+    @NotNull
     private Boolean isActive;
 
-    @Column(name = "measurement_frequency")
-    @Enumerated(EnumType.STRING)
+    @NotBlank
+    private String measurementType;
+
+    @NotNull
     private MeasurementsFrequency measurementsFrequency;
 
-    @Column(name = "last_measurment")
     private LocalDateTime lastMeasurment;
 
-    @ToString.Exclude
-    @ManyToOne
-    @JoinColumn(name = "measurement_type_id")
-    private MeasurementType measurementType;
-
-    @ToString.Exclude
-    @ManyToOne
-    @JoinColumn(name="actual_position")
+    @DBRef
     private Place actualPosition;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "sensor", fetch = FetchType.LAZY)
+    @DBRef
     private List<Measurement> measurements;
 
-    @PreRemove
+    /*@PreRemove
     private void preRemove() {
         measurements.forEach(measurement -> measurement.setSensor(null));
-    }
+    }*/
 
     public String getAddress() {
         StringBuilder address = new StringBuilder();

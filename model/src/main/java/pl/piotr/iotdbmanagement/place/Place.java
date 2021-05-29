@@ -2,53 +2,48 @@ package pl.piotr.iotdbmanagement.place;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.piotr.iotdbmanagement.sensor.Sensor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Setter
 @SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 @EqualsAndHashCode
-@Entity
-@Table(name = "places")
+@Document(collection = "places")
 public class Place implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    private String id;
 
-    @Column(name = "description", length = 25, nullable = false, unique = true)
+    @NotBlank
     private String description;
 
-    @Column(name = "position_x")
     private Integer positionX;
 
-    @Column(name = "position_y")
     private Integer positionY;
 
-    @Column(name = "position_z")
     private Integer positionZ;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
-    private List<Measurement> measurements;
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "actualPosition", fetch = FetchType.LAZY)
+    @DBRef
     private List<Sensor> sensors;
 
-    @PreRemove
+    @DBRef
+    private List<Measurement> measurements;
+
+    /*@PreRemove
     private void preRemove() {
         sensors.forEach(sensor -> sensor.setActualPosition(null));
         measurements.forEach(measurement -> measurement.setPlace(null));
-    }
+    }*/
 
 }
