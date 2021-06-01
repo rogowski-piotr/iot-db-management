@@ -1,10 +1,10 @@
 package pl.piotr.iotdbmanagement.measurementtype;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface MeasurementTypeRepository extends JpaRepository<MeasurementType, String> {
+public interface MeasurementTypeRepository extends MongoRepository<MeasurementType, String> {
 
     Optional<MeasurementType> findByType(String type);
 

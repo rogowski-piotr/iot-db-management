@@ -1,7 +1,6 @@
 package pl.piotr.iotdbmanagement.dto.sensor;
 
 import lombok.*;
-import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 
 import java.time.LocalDateTime;
@@ -15,7 +14,7 @@ import java.util.function.Function;
 @ToString
 @EqualsAndHashCode
 public class GetSensorResponse {
-    private Long id;
+    private String id;
 
     private String socket;
 
@@ -36,7 +35,7 @@ public class GetSensorResponse {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @ToString
     private static class Place {
-        Long id;
+        String id;
 
         String description;
     }
@@ -46,7 +45,7 @@ public class GetSensorResponse {
                 .id(sensor.getId())
                 .socket(sensor.getSocket())
                 .isActive(sensor.getIsActive())
-                .measurementType(sensor.getMeasurementType().getType())
+                .measurementType(sensor.getMeasurementType())
                 .measurementsFrequency(sensor.getMeasurementsFrequency().name())
                 .lastMeasurment(sensor.getLastMeasurment())
                 .actualPosition(

@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
+import pl.piotr.iotdbmanagement.measurement.MeasurementRepository;
 import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
-import pl.piotr.iotdbmanagement.sensor.Sensor;
-import pl.piotr.iotdbmanagement.measurement.MeasurementRepository;
 import pl.piotr.iotdbmanagement.place.PlaceRepository;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.sensor.SensorRepository;
 
 import java.time.LocalDateTime;
@@ -33,15 +33,15 @@ public class MeasurementService {
         this.placeRepository = placeRepository;
     }
 
-    public Optional<Measurement> findOne(UUID id) {
+    public Optional<Measurement> findOne(String id) {
         return measurementRepository.findById(id);
     }
 
     public List<Measurement> findAndFilterAll(Integer itemLimit, Integer page, MeasurementType measurementType,
-                                              Long sensorId, Long placeId, LocalDateTime dateFrom, LocalDateTime dateTo) {
+                                              String sensorId, String placeId, LocalDateTime dateFrom, LocalDateTime dateTo) {
         List<Measurement> resultList;
         if (measurementType != null) {
-            resultList = measurementRepository.findAllByMeasurementType(measurementType);
+            resultList = measurementRepository.findAllByMeasurementType(measurementType.getType());
 
         } else if (sensorId != null && placeId != null) {
             Optional<Sensor> sensorOptional = sensorRepository.findById(sensorId);
@@ -110,7 +110,7 @@ public class MeasurementService {
     }
 
     @Transactional
-    public void deleteOne(UUID id) {
+    public void deleteOne(String id) {
         measurementRepository.deleteById(id);
     }
 

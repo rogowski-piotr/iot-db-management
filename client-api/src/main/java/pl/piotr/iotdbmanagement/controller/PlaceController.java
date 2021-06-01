@@ -37,7 +37,7 @@ public class PlaceController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<GetPlaceResponse> getSinglePlace(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<GetPlaceResponse> getSinglePlace(@PathVariable(name = "id") String id) {
         logger.info("GET single , id: " + id);
         Optional<Place> placeOptional = placeService.find(id);
         return placeOptional
@@ -58,7 +58,7 @@ public class PlaceController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> updatePlace(@RequestBody UpdatePlaceRequest request, @PathVariable("id") Long id) {
+    public ResponseEntity<Void> updatePlace(@RequestBody UpdatePlaceRequest request, @PathVariable("id") String id) {
         logger.info("UPDATE");
         Optional<Place> placeOptional = placeService.find(id);
         if (placeOptional.isPresent() && placeService.isUniqueDescription(placeOptional.get(), request.getDescription())) {
@@ -72,7 +72,7 @@ public class PlaceController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deletePlace(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deletePlace(@PathVariable("id") String id) {
         logger.info(MessageFormat.format("DELETE place, id: {0}", id));
         Optional<Place> placeOptional = placeService.find(id);
         if (placeOptional.isPresent()) {

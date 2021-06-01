@@ -8,10 +8,10 @@ import pl.piotr.iotdbmanagement.dto.sensor.CreateSensorRequest;
 import pl.piotr.iotdbmanagement.dto.sensor.GetSensorResponse;
 import pl.piotr.iotdbmanagement.dto.sensor.GetSensorsResponse;
 import pl.piotr.iotdbmanagement.dto.sensor.UpdateSensorRequest;
+import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
-import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
 import pl.piotr.iotdbmanagement.service.SensorService;
 
@@ -51,7 +51,7 @@ public class SensorController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<GetSensorResponse> getSingleSensor(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<GetSensorResponse> getSingleSensor(@PathVariable(name = "id") String id) {
         logger.info("GET single sensor, id: " + id);
         Optional<Sensor> sensorOptional = sensorService.find(id);
         return sensorOptional
@@ -77,7 +77,7 @@ public class SensorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> updateSensor(@RequestBody UpdateSensorRequest request, @PathVariable("id") Long id) {
+    public ResponseEntity<Void> updateSensor(@RequestBody UpdateSensorRequest request, @PathVariable("id") String id) {
         logger.info("UPDATE");
         Optional<Sensor> sensor = sensorService.find(id);
         Place newPosition = sensorService.findPlace(request.getActualPosition());
@@ -93,7 +93,7 @@ public class SensorController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteSensor(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteSensor(@PathVariable("id") String id) {
         logger.info(MessageFormat.format("DELETE sensor, id: {0}", id));
         Optional<Sensor> sensorOptional = sensorService.find(id);
         if (sensorOptional.isPresent()) {

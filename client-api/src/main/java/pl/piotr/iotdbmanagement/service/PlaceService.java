@@ -3,8 +3,8 @@ package pl.piotr.iotdbmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.measurement.MeasurementRepository;
+import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.place.PlaceRepository;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class PlaceService {
         return placeRepository.findAll();
     }
 
-    public Optional<Place> find(Long id) {
+    public Optional<Place> find(String id) {
         return placeRepository.findById(id);
     }
 
@@ -42,7 +42,7 @@ public class PlaceService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(String id) {
         placeRepository.deleteById(id);
         measurementRepository.deleteAllByPlaceIsNullAndSensorIsNull();
     }

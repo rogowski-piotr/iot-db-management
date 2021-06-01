@@ -1,13 +1,13 @@
 package pl.piotr.iotdbmanagement.place;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PlaceRepository extends JpaRepository<Place, Long> {
+public interface PlaceRepository extends MongoRepository<Place, String> {
 
     Optional<Place> findByDescription(String description);
 

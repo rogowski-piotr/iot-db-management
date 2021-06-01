@@ -1,8 +1,8 @@
 package pl.piotr.iotdbmanagement.jobs;
 
 import com.google.gson.Gson;
-import pl.piotr.iotdbmanagement.measurement.Measurement;
 import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
+import pl.piotr.iotdbmanagement.measurement.Measurement;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.service.MeasurementService;
 import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
@@ -57,9 +57,9 @@ public class Job implements Runnable {
                 .place(sensor.getActualPosition())
                 .build();
 
-        logger.info("type: " + sensor.getMeasurementType().getType());
+        logger.info("type: " + sensor.getMeasurementType());
 
-        switch (sensor.getMeasurementType().getType()) {
+        switch (sensor.getMeasurementType()) {
             case "TEMPERATURE_AND_HUMIDITY":
                 logger.info("type classified as TEMPERATURE_AND_HUMIDITY");
                 MeasurmentTemperatureAndHumidityResponse responseObject = new Gson()
@@ -69,11 +69,11 @@ public class Job implements Runnable {
                     sensorService.update(sensor);
                     if (!sensor.getIsActive()) return;
                 }
-                infoObject.setMeasurementType(measurementTypeService.getTypeOfString("TEMPERATURE"));
+                infoObject.setMeasurementType("TEMPERATURE");
                 measurements.add(
                         MeasurmentTemperatureAndHumidityResponse
                                 .dtoToEntityTemperatureMapper().apply(responseObject, infoObject));
-                infoObject.setMeasurementType(measurementTypeService.getTypeOfString("HUMIDITY"));
+                infoObject.setMeasurementType("HUMIDITY");
                 measurements.add(
                         MeasurmentTemperatureAndHumidityResponse
                                 .dtoToEntityHumidityMapper().apply(responseObject, infoObject));

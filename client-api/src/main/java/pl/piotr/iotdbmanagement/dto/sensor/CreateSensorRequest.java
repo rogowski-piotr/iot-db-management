@@ -1,10 +1,10 @@
 package pl.piotr.iotdbmanagement.dto.sensor;
 
 import lombok.*;
+import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
-import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.utils.TriFunction;
 
 @Getter
@@ -22,13 +22,13 @@ public class CreateSensorRequest {
 
     private MeasurementsFrequency measurementsFrequency;
 
-    private Long actualPositionPlaceId;
+    private String actualPositionPlaceId;
 
     public static TriFunction<CreateSensorRequest, Place, MeasurementType, Sensor> dtoToEntityMapper() {
         return (request, place, type) ->
                 Sensor.builder()
                     .socket(request.getSocket())
-                    .measurementType(type)
+                    .measurementType(type.getType())
                     .isActive(true)
                     .measurementsFrequency(request.getMeasurementsFrequency())
                     .actualPosition(place)

@@ -1,14 +1,12 @@
 package pl.piotr.iotdbmanagement.measurement;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface MeasurementRepository extends JpaRepository<Measurement, UUID> {
+public interface MeasurementRepository extends MongoRepository<Measurement, String> {
 
     List<Measurement> findAllByPlace(Place place);
 
@@ -16,7 +14,8 @@ public interface MeasurementRepository extends JpaRepository<Measurement, UUID> 
 
     List<Measurement> findAllBySensorAndPlace(Sensor sensor, Place place);
 
-    List<Measurement> findAllByMeasurementType(MeasurementType measurementType);
+    List<Measurement> findAllByMeasurementType(String measurementType);
 
     void deleteAllByPlaceIsNullAndSensorIsNull();
+
 }
