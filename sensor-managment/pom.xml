@@ -16,6 +16,12 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<pi.host>192.168.0.18</pi.host>
+		<pi.port>22</pi.port>
+		<pi.user>pi</pi.user>
+		<pi.password>raspberry</pi.password>
+		<pi.deployDirectory>/home/pi/workspace</pi.deployDirectory>
+		<pi.main.class>pl.piotr.iotdbmanagement.ClientApiApplication</pi.main.class>
 	</properties>
 
 	<dependencies>
@@ -56,6 +62,42 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<sshexec host="${pi.host}" port="${pi.port}" username="${pi.user}" password="${pi.password}"
+										 trust="true" failonerror="false" verbose="true"
+										 command="mkdir --parents ${pi.deployDirectory}"/>
+								<scp
+										file="${project.build.directory}/${project.build.finalName}.jar"
+										todir="${pi.user}:${pi.password}@${pi.host}:${pi.deployDirectory}"
+										port="${pi.port}" trust="true" verbose="true" failonerror="true">
+								</scp>
+								<sshexec host="${pi.host}" port="${pi.port}" username="${pi.user}"
+										 password="${pi.password}" trust="true" failonerror="false"
+										 verbose="true"
+										 command="java -jar ${pi.deployDirectory}/${project.build.finalName}.jar > sensor-management.log &amp;"/>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-jsch</artifactId>
+						<version>1.9.6</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
