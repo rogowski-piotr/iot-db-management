@@ -21,6 +21,7 @@
 		<pi.user>pi</pi.user>
 		<pi.password>raspberry</pi.password>
 		<pi.deployDirectory>/home/pi/workspace</pi.deployDirectory>
+		<pi.containerName>sensor-managment</pi.containerName>
 		<pi.main.class>pl.piotr.iotdbmanagement.ClientApiApplication</pi.main.class>
 	</properties>
 
@@ -83,10 +84,11 @@
 										todir="${pi.user}:${pi.password}@${pi.host}:${pi.deployDirectory}"
 										port="${pi.port}" trust="true" verbose="true" failonerror="true">
 								</scp>
-								<sshexec host="${pi.host}" port="${pi.port}" username="${pi.user}"
-										 password="${pi.password}" trust="true" failonerror="false"
-										 verbose="true"
-										 command="java -jar ${pi.deployDirectory}/${project.build.finalName}.jar > sensor-management.log &amp;"/>
+								<exec executable="ssh">
+									<arg value="-tt" />
+									<arg value="pi@192.168.0.18" />
+									<arg value="sudo docker exec -it ${pi.containerName} ./reload.sh ${project.build.finalName}.jar"/>
+								</exec>
 							</target>
 						</configuration>
 					</execution>
