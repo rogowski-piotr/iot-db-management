@@ -9,9 +9,9 @@ services:
       - 8080:8080
     container_name: client-api
     depends_on:
-      - db
+      - postgres
     links:
-      - db
+      - postgres
 
   sensor-managment:
     privileged: true
@@ -21,13 +21,16 @@ services:
       - /home/pi/workspace:/app
     container_name: sensor-managment
     depends_on:
-      - db
+      - postgres
     links:
-      - db
+      - postgres
 
-  db:
+  postgres:
     image: 'arm32v7/postgres:latest'
-    container_name: db
+    container_name: postgres
     environment:
+      - POSTGRES_ROOT_PASSWORD=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
