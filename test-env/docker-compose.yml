@@ -1,0 +1,36 @@
+services:
+  client-api:
+    privileged: true
+    tty: true
+    image: 'test-env:latest'
+    volumes:
+      - /home/pi/workspace:/app
+    ports:
+      - 8080:8080
+    container_name: client-api
+    depends_on:
+      - postgres
+    links:
+      - postgres
+
+  sensor-managment:
+    privileged: true
+    tty: true
+    image: 'test-env:latest'
+    volumes:
+      - /home/pi/workspace:/app
+    container_name: sensor-managment
+    depends_on:
+      - postgres
+    links:
+      - postgres
+
+  postgres:
+    image: 'arm32v7/postgres:latest'
+    container_name: postgres
+    environment:
+      - POSTGRES_ROOT_PASSWORD=postgres
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
