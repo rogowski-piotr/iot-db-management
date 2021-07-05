@@ -28,9 +28,6 @@ services:
   postgres:
     image: 'arm32v7/postgres:latest'
     container_name: postgres
-    volumes:
-      - /home/pi/workspace/db_configuration.sql:/app/db_configuration.sql
-#    command: "psql -f /app/db_configuration.sql"
     environment:
       - POSTGRES_ROOT_PASSWORD=postgres
       - POSTGRES_USER=root

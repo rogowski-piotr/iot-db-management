@@ -4,8 +4,6 @@ EXPOSE 8080
 
 WORKDIR /app
 
-# COPY ./client-api.jar /app
-
 RUN sudo apt-get update \
 	&& apt-get clean -y \
 	&& sed -i 's/stretch/buster/g' /etc/apt/sources.list \
