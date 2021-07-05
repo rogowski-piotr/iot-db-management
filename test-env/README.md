@@ -1,20 +1,20 @@
-## Test environment
+# Test environment
 
-#### Usage
+### Usage
 Run maven install to automatic deploy application to remote test environment.
 ```java
 mvn install
 ```
 
-#### Configuration:
+### Configuration:
 
-##### 1. Add SSH keys between the development-env and the test-env
+#### 1. Add SSH keys between the development-env and the test-env
 ```shell script
 > ssh-keygen
 > type C:\Users\<user>\.ssh\id_rsa.pub | ssh <user>@<host> "cat >> .ssh/authorized_keys"
 ```
 
-##### 2. Move to this localization and fetch all files
+#### 2. Move to this localization and fetch all files
 if you want work in different localization change all path in all pom.xml files
 ```shell script
 $ mkdir /home/pi/workspace
@@ -28,21 +28,20 @@ $ rm -rf test-env/
 $ chmod +x reload.sh
 ```
 
-##### 3. Build Docker environment
-if you want work in different localization change all path in all pom.xml files
+#### 3. Build Docker environment
 ```shell script
 $ docker build --rm -t test-env .
 $ docker-compose up
 ```
 
-##### 5. Fix date in containers
+#### 5. Fix date in containers
 ```shell script
-$ docker exec -it sensor-managment date -s '2021-07-03 14:57:00'
-$ docker exec -it client-api date -s '2021-07-03 14:57:00'
+$ docker exec -it sensor-managment date -s 'yyyy-MM-dd HH:mm:ss'
+$ docker exec -it client-api date -s 'yyyy-MM-dd HH:mm:ss'
 ```
 
-##### 6. Add schema in postgres
+#### 6. Add schema in postgres
 ```shell script
-> psql -u root -h <address> -p postgres
+$ PGPASSWORD=postgres psql -h localhost -p 5432 -U root postgres
 =# CREATE SCHEMA sensors;
 ```
