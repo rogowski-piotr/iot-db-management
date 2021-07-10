@@ -13,7 +13,9 @@ Included to the response flag 'active' informs about correctness of sensor work.
 ## ✉ Communication ✉
 1. Connect on device address and specific TCP port 
 2. Handle the response
+<br/>
 response example:
+
 ```json
 {
   "sensor": "DHT11",
