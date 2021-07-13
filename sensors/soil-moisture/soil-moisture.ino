@@ -1,23 +1,56 @@
-#define vccPin 7
-#define sensorPin A0
+#include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
 
-int measure() {
-  digitalWrite(vccPin, HIGH);
-  delay(100);
-  int value = analogRead(sensorPin);
-  delay(10);
-  digitalWrite(vccPin, LOW);
-  return value;
+#define VCC_PIN D7
+#define SENSOR_PIN A0
+#define SSID "ssid_name"
+#define PASSWORD "secret"
+#define PORT 50007
+
+WiFiServer server(PORT);
+
+int value;
+bool isWorking = true;
+
+void measure() {
+  digitalWrite(VCC_PIN, HIGH);
+  delay(50);
+  value = analogRead(A0);
+  digitalWrite(VCC_PIN, LOW);
+}
+
+void serializeAndSend(WiFiClient client) {
+  const size_t capacity = JSON_OBJECT_SIZE(4);
+  DynamicJsonDocument doc(capacity);
+  doc["sensor"] = "DHT11";
+  doc["active"] = isWorking;
+  doc["soil-moisture"] = value;
+  serializeJson(doc, client);
 }
 
 void setup() {
   Serial.begin(9600);
-  pinMode(vccPin, OUTPUT);
+  pinMode(VCC_PIN, OUTPUT);
+  pinMode(SENSOR_PIN, INPUT);
+  WiFi.begin(SSID, PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500); 
+  }
+  server.begin();
+  Serial.println("Web socket:");
+  Serial.print(WiFi.localIP());
+  Serial.print(":");
+  Serial.println(PORT);
 }
 
 void loop() {
-  int value = measure();
-  Serial.print("Analog Value : ");
-  Serial.println(value);  
-  delay(2000); 
+  WiFiClient client = server.available();
+  if (!client) {
+    return;
+  }
+  Serial.println("new client");
+  client.flush();
+  measure();
+  serializeAndSend(client);
+  Serial.println("Client disconnected\n");
 }
