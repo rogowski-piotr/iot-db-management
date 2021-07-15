@@ -1,14 +1,14 @@
 -- MEASUREMENTS TYPES
-INSERT INTO measurments_type (id, type) VALUES (1, 'TEMPERATURE_AND_HUMIDITY');
-INSERT INTO measurments_type (id, type) VALUES (2, 'TEMPERATURE');
-INSERT INTO measurments_type (id, type) VALUES (3, 'HUMIDITY');
+INSERT INTO measurments_type (id, type) VALUES ((SELECT nextval ('measurement_type_id_sequence')), 'TEMPERATURE_AND_HUMIDITY');
+INSERT INTO measurments_type (id, type) VALUES ((SELECT nextval ('measurement_type_id_sequence')), 'TEMPERATURE');
+INSERT INTO measurments_type (id, type) VALUES ((SELECT nextval ('measurement_type_id_sequence')), 'HUMIDITY');
 
 -- PLACES
-INSERT INTO places (id, description) VALUES (1, 'room_1');
-INSERT INTO places (id, description) VALUES (2, 'room_2');
+INSERT INTO places (id, description) VALUES ((SELECT nextval ('place_id_sequence')), 'room_1');
+INSERT INTO places (id, description) VALUES ((SELECT nextval ('place_id_sequence')), 'room_2');
 
 -- SENSORS
 INSERT INTO sensors (id, active, measurement_frequency, socket, measurement_type_id, actual_position)
-VALUES (1, true, 'ONCE_PER_MINUTE', '192.168.0.19:50007', 1, 1);
+VALUES ((SELECT nextval ('sensor_id_sequence')), true, 'ONCE_PER_MINUTE', '192.168.0.19:50007', 1, 1);
 INSERT INTO sensors (id, active, measurement_frequency, socket, measurement_type_id, actual_position)
-VALUES (2, false, 'ONCE_PER_MINUTE', '192.168.0.20:50007', 1, 2);
+VALUES ((SELECT nextval ('sensor_id_sequence')), false, 'ONCE_PER_MINUTE', '192.168.0.20:50007', 1, 2);

@@ -24,7 +24,8 @@ import java.util.List;
 public class Sensor implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "sensor_id_generator", sequenceName = "sensor_id_sequence", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sensor_id_generator")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 

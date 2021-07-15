@@ -21,7 +21,8 @@ import java.util.List;
 public class Place implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "place_id_generator", sequenceName = "place_id_sequence", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "place_id_generator")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 

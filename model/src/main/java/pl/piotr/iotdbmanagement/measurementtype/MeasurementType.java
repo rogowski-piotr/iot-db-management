@@ -21,7 +21,8 @@ import java.util.List;
 public class MeasurementType implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "measurement_type_id_generator", sequenceName = "measurement_type_id_sequence", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "measurement_type_id_generator")
     @Column(name = "id", updatable = false, nullable = false)
     Long id;
 
