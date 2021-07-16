@@ -2,14 +2,15 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
+#define SSID "ssid_name"
+#define PASSWORD "secret"
+#define PORT 50007
+
 #define DHTPIN D8
 #define DHTTYPE DHT11
-DHT dht(DHTPIN, DHTTYPE);
 
-#define PORT 50007
 WiFiServer server(PORT);
-const char* ssid = "ssid_name";
-const char* password = "secret";
+DHT dht(DHTPIN, DHTTYPE);
 
 bool isWorking = true;
 float temperature, humidity;
@@ -28,20 +29,20 @@ void serializeAndSend(WiFiClient client) {
   doc["temperature"] = temperature;
   doc["humidity"] = humidity;
   serializeJson(doc, client);
+  serializeJson(doc, Serial);
 }
 
 void setup() {
   Serial.begin(9600);
   dht.begin();
-  WiFi.begin(ssid, password);
+  Serial.println(String("Connecting to ssid: ") + String(SSID));
+  WiFi.begin(SSID, PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500); 
+    delay(500);
+    Serial.print(".");
   }
   server.begin();
-  Serial.println("Web socket:");
-  Serial.print(WiFi.localIP());
-  Serial.print(":");
-  Serial.println(PORT);
+  Serial.println("\nConnected!\nServer at socket: " + WiFi.localIP().toString() + ":" + PORT);
 }
 
 void loop() {
@@ -49,9 +50,10 @@ void loop() {
   if (!client) {
     return;
   }
-  Serial.println("new client");
+  Serial.print("\nConnected client: ");
+  Serial.println(client.remoteIP());
   client.flush();
   measureDHT();
   serializeAndSend(client);
-  Serial.println("Client disconnected\n");
+  Serial.println("\nDisconnected client");
 }
