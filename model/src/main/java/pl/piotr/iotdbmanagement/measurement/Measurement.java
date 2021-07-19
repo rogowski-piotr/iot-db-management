@@ -23,8 +23,7 @@ import java.util.UUID;
 public class Measurement implements Serializable {
 
     @Id
-    @SequenceGenerator(name = "measurement_id_generator", sequenceName = "measurement_id_sequence", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "measurement_id_generator")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
