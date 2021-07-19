@@ -37,7 +37,7 @@ void serializeAndSend(WiFiClient client) {
   DynamicJsonDocument doc(capacity);
   doc["sensor"] = "soil-moisture";
   doc["active"] = isWorking;
-  doc["soil-moisture"] = value;
+  doc["soilMoisture"] = value;
   serializeJson(doc, client);
   serializeJson(doc, Serial);
 }
