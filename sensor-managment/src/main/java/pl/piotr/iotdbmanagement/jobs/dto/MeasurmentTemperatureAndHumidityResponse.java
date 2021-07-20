@@ -2,8 +2,11 @@ package pl.piotr.iotdbmanagement.jobs.dto;
 
 import lombok.*;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
+import pl.piotr.iotdbmanagement.utils.QuadriFunction;
 
-import java.util.function.BiFunction;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -22,23 +25,23 @@ public class MeasurmentTemperatureAndHumidityResponse {
 
     private Float humidity;
 
-    public static BiFunction<MeasurmentTemperatureAndHumidityResponse, Measurement, Measurement> dtoToEntityTemperatureMapper() {
-        return (responseObj, infoObj) -> Measurement.builder()
+    public static QuadriFunction<MeasurmentTemperatureAndHumidityResponse, Sensor, MeasurementType, LocalDateTime, Measurement> dtoToEntityTemperatureMapper() {
+        return (responseObj, sensor, measurementType, dateTime) -> Measurement.builder()
                 .value(responseObj.getTemperature())
-                .measurementType(infoObj.getMeasurementType())
-                .date(infoObj.getDate())
-                .sensor(infoObj.getSensor())
-                .place(infoObj.getPlace())
+                .measurementType(measurementType)
+                .date(dateTime)
+                .sensor(sensor)
+                .place(sensor.getActualPosition())
                 .build();
     }
 
-    public static BiFunction<MeasurmentTemperatureAndHumidityResponse, Measurement, Measurement> dtoToEntityHumidityMapper() {
-        return (responseObj, infoObj) -> Measurement.builder()
+    public static QuadriFunction<MeasurmentTemperatureAndHumidityResponse, Sensor, MeasurementType, LocalDateTime, Measurement> dtoToEntityHumidityMapper() {
+        return (responseObj, sensor, measurementType, dateTime) -> Measurement.builder()
                 .value(responseObj.getHumidity())
-                .measurementType(infoObj.getMeasurementType())
-                .date(infoObj.getDate())
-                .sensor(infoObj.getSensor())
-                .place(infoObj.getPlace())
+                .measurementType(measurementType)
+                .date(dateTime)
+                .sensor(sensor)
+                .place(sensor.getActualPosition())
                 .build();
     }
 

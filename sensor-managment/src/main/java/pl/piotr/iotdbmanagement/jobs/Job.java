@@ -1,6 +1,7 @@
 package pl.piotr.iotdbmanagement.jobs;
 
 import com.google.gson.Gson;
+import pl.piotr.iotdbmanagement.jobs.dto.MeasurementSoilMoistureResponse;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
 import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
@@ -51,40 +52,39 @@ public class Job implements Runnable {
 
         List<Measurement> measurements = new ArrayList<>();
 
-        Measurement infoObject = Measurement.builder()
-                .date(LocalDateTime.now())
-                .sensor(sensor)
-                .place(sensor.getActualPosition())
-                .build();
-
-        logger.info("type: " + sensor.getMeasurementType().getType());
-
         switch (sensor.getMeasurementType().getType()) {
             case "TEMPERATURE_AND_HUMIDITY":
                 logger.info("type classified as TEMPERATURE_AND_HUMIDITY");
-                MeasurmentTemperatureAndHumidityResponse responseObject = new Gson()
+                MeasurmentTemperatureAndHumidityResponse responseTempHumi = new Gson()
                         .fromJson(response, MeasurmentTemperatureAndHumidityResponse.class);
-                if ((boolean) sensor.getIsActive() != (boolean) responseObject.getActive()) {
-                    sensor.setIsActive(responseObject.getActive());
+                if (! responseTempHumi.getActive()) {
+                    sensor.setIsActive(false);
                     sensorService.update(sensor);
-                    if (!sensor.getIsActive()) return;
+                    return;
                 }
-                infoObject.setMeasurementType(measurementTypeService.getTypeOfString("TEMPERATURE"));
                 measurements.add(
-                        MeasurmentTemperatureAndHumidityResponse
-                                .dtoToEntityTemperatureMapper().apply(responseObject, infoObject));
-                infoObject.setMeasurementType(measurementTypeService.getTypeOfString("HUMIDITY"));
+                        MeasurmentTemperatureAndHumidityResponse.dtoToEntityTemperatureMapper()
+                                .apply(responseTempHumi, sensor, measurementTypeService.getTypeOfString("TEMPERATURE"), LocalDateTime.now())
+                );
                 measurements.add(
-                        MeasurmentTemperatureAndHumidityResponse
-                                .dtoToEntityHumidityMapper().apply(responseObject, infoObject));
+                        MeasurmentTemperatureAndHumidityResponse.dtoToEntityHumidityMapper()
+                                .apply(responseTempHumi, sensor, measurementTypeService.getTypeOfString("HUMIDITY"), LocalDateTime.now())
+                );
                 break;
 
-            case "TEMPERATURE":
-                logger.info("type classified as TEMPERATURE");
-                break;
-
-            case "HUMIDITY":
-                logger.info("type classified as HUMIDITY");
+            case "SOIL_MOISTURE":
+                logger.info("type classified as SOIL_MOISTURE");
+                MeasurementSoilMoistureResponse responseSoilMoisture = new Gson()
+                        .fromJson(response, MeasurementSoilMoistureResponse.class);
+                if (! responseSoilMoisture.getActive()) {
+                    sensor.setIsActive(false);
+                    sensorService.update(sensor);
+                    return;
+                }
+                measurements.add(
+                        MeasurementSoilMoistureResponse.dtoToEntitySoilMoistureMapper()
+                                .apply(responseSoilMoisture, sensor, LocalDateTime.now())
+                );
                 break;
 
             default:
