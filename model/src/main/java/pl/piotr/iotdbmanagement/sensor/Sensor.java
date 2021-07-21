@@ -6,6 +6,7 @@ import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
+import pl.piotr.iotdbmanagement.sensorsettings.SensorSettings;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -35,6 +36,9 @@ public class Sensor implements Serializable {
     @Column(name = "active")
     private Boolean isActive;
 
+    @Column(name = "consecutive_failures")
+    private Integer consecutiveFailures;
+
     @Column(name = "measurement_frequency")
     @Enumerated(EnumType.STRING)
     private MeasurementsFrequency measurementsFrequency;
@@ -49,8 +53,13 @@ public class Sensor implements Serializable {
 
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name="actual_position")
+    @JoinColumn(name="place_id")
     private Place actualPosition;
+
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name="sensor_settings_id")
+    private SensorSettings sensorSettings;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "sensor", fetch = FetchType.LAZY)

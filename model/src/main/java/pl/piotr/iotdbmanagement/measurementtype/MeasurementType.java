@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder
 @Entity
-@Table(name = "measurments_type")
+@Table(name = "measurment_types")
 public class MeasurementType implements Serializable {
 
     @Id
