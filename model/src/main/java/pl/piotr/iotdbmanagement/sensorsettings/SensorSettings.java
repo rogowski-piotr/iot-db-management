@@ -25,13 +25,16 @@ public class SensorSettings implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "acceptable_consecutive_failures")
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "acceptable_consecutive_failures", nullable = false)
     private Integer acceptableConsecutiveFailures;
 
-    @Column(name = "cycles_to_refresh_activity")
+    @Column(name = "cycles_to_refresh_activity", nullable = false)
     private Integer cyclesToRefresh;
 
-    @Column(name = "request_timeout")
+    @Column(name = "request_timeout", nullable = false)
     private Integer requestTimeout;
 
     @ToString.Exclude

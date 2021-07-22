@@ -21,8 +21,8 @@ VALUES ((SELECT nextval ('place_id_sequence')), 'room_2');
 
 
 -- SENSOR_SETTINGS
-INSERT INTO sensor_settings (id, acceptable_consecutive_failures, cycles_to_refresh_activity, request_timeout)
-VALUES ((SELECT nextval ('sensor_settings_id_sequence')), 1, 2, 5000);
+INSERT INTO sensor_settings (id, name, acceptable_consecutive_failures, cycles_to_refresh_activity, request_timeout)
+VALUES ((SELECT nextval ('sensor_settings_id_sequence')), 'default', 1, 2, 5000);
 
 
 -- SENSORS
