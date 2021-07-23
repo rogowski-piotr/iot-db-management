@@ -5,10 +5,7 @@ import pl.piotr.iotdbmanagement.jobs.dto.MeasurementSoilMoistureResponse;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
 import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
-import pl.piotr.iotdbmanagement.service.MeasurementService;
-import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
-import pl.piotr.iotdbmanagement.service.SensorService;
-import pl.piotr.iotdbmanagement.service.SensorSettingsService;
+import pl.piotr.iotdbmanagement.service.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,19 +19,13 @@ public class Job implements Runnable {
     private final int REQUEST_TIMEOUT;
     private Logger logger;
     private Sensor sensor;
-    private MeasurementService measurementService;
-    private SensorService sensorService;
-    private MeasurementTypeService measurementTypeService;
-    private SensorSettingsService sensorSettingsService;
+    private MeasurementExecutionService measurementExecutionService;
 
-    protected Job(Sensor sensor, MeasurementService measurementService, SensorService sensorService, MeasurementTypeService measurementTypeService, SensorSettingsService sensorSettingsService) {
+    protected Job(Sensor sensor, MeasurementExecutionService measurementExecutionService) {
         logger = Logger.getLogger("sensor at: " + sensor.getSocket());
-        this.REQUEST_TIMEOUT = sensor.getSensorSettings() != null ? sensor.getSensorSettings().getRequestTimeout() : sensorSettingsService.getDefaultSensorTimeout();
+        this.REQUEST_TIMEOUT = sensor.getSensorSettings() != null ? sensor.getSensorSettings().getRequestTimeout() : measurementExecutionService.getDefaultSensorTimeout();
         this.sensor = sensor;
-        this.measurementService = measurementService;
-        this.sensorService = sensorService;
-        this.measurementTypeService = measurementTypeService;
-        this.sensorSettingsService = sensorSettingsService;
+        this.measurementExecutionService = measurementExecutionService;
     }
 
     @Override
@@ -42,7 +33,7 @@ public class Job implements Runnable {
         try {
             String response = connectWithSensor();
             List<Measurement> measurements = transformResponseToObject(response);
-            measurements.forEach(measurement -> measurementService.create(measurement));
+            measurements.forEach(measurement -> measurementExecutionService.addMeasurement(measurement));
             logger.info("data has been inserted");
         } catch (InterruptedException e) {
             logger.warning("Thread has been interrupted!");
@@ -51,8 +42,7 @@ public class Job implements Runnable {
 
     private void deactivateAndInterrupt() throws InterruptedException {
         logger.info("deactivating and aborting");
-        sensor.setIsActive(false);
-        sensorService.update(sensor);
+        measurementExecutionService.deactivateSensor(sensor);
         throw new InterruptedException();
     }
 
@@ -86,11 +76,11 @@ public class Job implements Runnable {
                 }
                 measurements.add(
                         MeasurmentTemperatureAndHumidityResponse.dtoToEntityTemperatureMapper()
-                                .apply(responseTempHumi, sensor, measurementTypeService.getTypeOfString("TEMPERATURE"), LocalDateTime.now())
+                                .apply(responseTempHumi, sensor, measurementExecutionService.getMeasurementTypeByString("TEMPERATURE"), LocalDateTime.now())
                 );
                 measurements.add(
                         MeasurmentTemperatureAndHumidityResponse.dtoToEntityHumidityMapper()
-                                .apply(responseTempHumi, sensor, measurementTypeService.getTypeOfString("HUMIDITY"), LocalDateTime.now())
+                                .apply(responseTempHumi, sensor, measurementExecutionService.getMeasurementTypeByString("HUMIDITY"), LocalDateTime.now())
                 );
                 break;
 

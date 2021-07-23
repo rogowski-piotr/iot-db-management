@@ -8,10 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
-import pl.piotr.iotdbmanagement.service.MeasurementService;
-import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
-import pl.piotr.iotdbmanagement.service.SensorService;
-import pl.piotr.iotdbmanagement.service.SensorSettingsService;
+import pl.piotr.iotdbmanagement.service.*;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -25,26 +22,20 @@ public class JobsCaller {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private static final int MAX_THREAD_NUMBER = 3;
     private ExecutorService executor;
-    private SensorService sensorService;
-    private MeasurementService measurementService;
-    private MeasurementTypeService measurementTypeService;
-    private SensorSettingsService sensorSettingsService;
+    private MeasurementExecutionService measurementExecutionService;
 
     @Autowired
-    public JobsCaller(SensorService sensorService, MeasurementService measurementService, MeasurementTypeService measurementTypeService, SensorSettingsService sensorSettingsService) {
-        this.sensorService = sensorService;
-        this.measurementService = measurementService;
-        this.measurementTypeService = measurementTypeService;
-        this.sensorSettingsService = sensorSettingsService;
+    public JobsCaller(MeasurementExecutionService measurementExecutionService) {
+        this.measurementExecutionService = measurementExecutionService;
         executor = Executors.newFixedThreadPool(MAX_THREAD_NUMBER);
     }
 
     private void call(MeasurementsFrequency measurementsFrequency) {
         logger.info("Job for: " + measurementsFrequency + " has been started");
-        List<Sensor> sensors = sensorService.findAllByMeasurementsFrequencyAndIsActive(measurementsFrequency, true);
+        List<Sensor> sensors = measurementExecutionService.findSensorsToMeasure(measurementsFrequency);
         logger.info("Found " + sensors.size() + " elements");
         sensors.forEach(
-                sensor -> executor.submit(new Job(sensor, measurementService, sensorService, measurementTypeService, sensorSettingsService))
+                sensor -> executor.submit(new Job(sensor, measurementExecutionService))
         );
     }
 
