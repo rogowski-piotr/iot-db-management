@@ -11,6 +11,7 @@ import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.service.MeasurementService;
 import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
 import pl.piotr.iotdbmanagement.service.SensorService;
+import pl.piotr.iotdbmanagement.service.SensorSettingsService;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,12 +28,14 @@ public class JobsCaller {
     private SensorService sensorService;
     private MeasurementService measurementService;
     private MeasurementTypeService measurementTypeService;
+    private SensorSettingsService sensorSettingsService;
 
     @Autowired
-    public JobsCaller(SensorService sensorService, MeasurementService measurementService, MeasurementTypeService measurementTypeService) {
+    public JobsCaller(SensorService sensorService, MeasurementService measurementService, MeasurementTypeService measurementTypeService, SensorSettingsService sensorSettingsService) {
         this.sensorService = sensorService;
         this.measurementService = measurementService;
         this.measurementTypeService = measurementTypeService;
+        this.sensorSettingsService = sensorSettingsService;
         executor = Executors.newFixedThreadPool(MAX_THREAD_NUMBER);
     }
 
@@ -40,7 +43,9 @@ public class JobsCaller {
         logger.info("Job for: " + measurementsFrequency + " has been started");
         List<Sensor> sensors = sensorService.findAllByMeasurementsFrequencyAndIsActive(measurementsFrequency, true);
         logger.info("Found " + sensors.size() + " elements");
-        sensors.forEach(sensor -> executor.submit(new Job(sensor, measurementService, sensorService, measurementTypeService)));
+        sensors.forEach(
+                sensor -> executor.submit(new Job(sensor, measurementService, sensorService, measurementTypeService, sensorSettingsService))
+        );
     }
 
     @Async
