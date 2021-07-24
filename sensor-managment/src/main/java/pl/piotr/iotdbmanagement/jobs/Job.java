@@ -47,18 +47,11 @@ public class Job implements Runnable {
     }
 
     private String connectWithSensor() throws InterruptedException {
-        String response = null;
-        try {
-            Socket socket = new Socket(sensor.getAddress(), sensor.getPort());
-            socket.setSoTimeout(REQUEST_TIMEOUT);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            response = reader.readLine();
-            reader.close();
-        } catch (Exception e) {
-            logger.warning("Can not received data from sensor. Cause: " + e.getMessage());
+        Connector connector = new Connector(sensor.getAddress(), sensor.getPort(), REQUEST_TIMEOUT);
+        String response = connector.connect();
+        if (connector.connectionFailed()) {
             deactivateAndInterrupt();
         }
-        logger.info("Received data: " + response);
         return response;
     }
 
