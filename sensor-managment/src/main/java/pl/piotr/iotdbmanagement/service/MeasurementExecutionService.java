@@ -9,6 +9,7 @@ import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.measurementtype.MeasurementTypeRepository;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.sensor.SensorRepository;
+import pl.piotr.iotdbmanagement.sensorsettings.SensorSettings;
 import pl.piotr.iotdbmanagement.sensorsettings.SensorSettingsRepository;
 
 import java.util.List;
@@ -38,9 +39,17 @@ public class MeasurementExecutionService {
     }
 
     @Transactional
-    public void deactivateSensor(Sensor sensor) {
-        sensor.setIsActive(false);
+    public boolean verifyToDeactivate(Sensor sensor) {
+        boolean isDeactivated = false;
+        sensor.setConsecutiveFailures(sensor.getConsecutiveFailures() + 1);
+        int acceptableFailures = sensor.getSensorSettings().getAcceptableConsecutiveFailures();
+
+        if (sensor.getConsecutiveFailures() > acceptableFailures) {
+            sensor.setIsActive(false);
+            isDeactivated = true;
+        }
         sensorRepository.save(sensor);
+        return isDeactivated;
     }
 
     public List<Sensor> findSensorsToMeasure(MeasurementsFrequency measurementsFrequency) {

@@ -34,8 +34,11 @@ public class Job implements Runnable {
     }
 
     private void deactivateAndInterrupt() throws InterruptedException {
-        logger.info("deactivating and aborting");
-        measurementExecutionService.deactivateSensor(sensor);
+        if (measurementExecutionService.verifyToDeactivate(sensor)) {
+            logger.info("aborting and deactivating sensor");
+        } else {
+            logger.info("aborting but sensor still active");
+        }
         throw new InterruptedException();
     }
 
