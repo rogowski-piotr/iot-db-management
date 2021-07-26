@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @EnableScheduling
 @EnableAsync
 public class JobsCaller {
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
     private static final int MAX_THREAD_NUMBER = 3;
     private ExecutorService executor;
     private MeasurementExecutionService measurementExecutionService;

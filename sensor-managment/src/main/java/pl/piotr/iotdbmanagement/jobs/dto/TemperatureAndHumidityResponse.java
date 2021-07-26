@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
-public class MeasurmentTemperatureAndHumidityResponse {
+public class TemperatureAndHumidityResponse {
 
     private String sensor;
 
@@ -25,7 +25,7 @@ public class MeasurmentTemperatureAndHumidityResponse {
 
     private Float humidity;
 
-    public static QuadriFunction<MeasurmentTemperatureAndHumidityResponse, Sensor, MeasurementType, LocalDateTime, Measurement> dtoToEntityTemperatureMapper() {
+    public static QuadriFunction<TemperatureAndHumidityResponse, Sensor, MeasurementType, LocalDateTime, Measurement> dtoToEntityTemperatureMapper() {
         return (responseObj, sensor, measurementType, dateTime) -> Measurement.builder()
                 .value(responseObj.getTemperature())
                 .measurementType(measurementType)
@@ -35,7 +35,7 @@ public class MeasurmentTemperatureAndHumidityResponse {
                 .build();
     }
 
-    public static QuadriFunction<MeasurmentTemperatureAndHumidityResponse, Sensor, MeasurementType, LocalDateTime, Measurement> dtoToEntityHumidityMapper() {
+    public static QuadriFunction<TemperatureAndHumidityResponse, Sensor, MeasurementType, LocalDateTime, Measurement> dtoToEntityHumidityMapper() {
         return (responseObj, sensor, measurementType, dateTime) -> Measurement.builder()
                 .value(responseObj.getHumidity())
                 .measurementType(measurementType)
