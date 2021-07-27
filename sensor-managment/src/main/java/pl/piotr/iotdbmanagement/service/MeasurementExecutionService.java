@@ -46,6 +46,7 @@ public class MeasurementExecutionService {
 
         if (sensor.getConsecutiveFailures() > acceptableFailures) {
             sensor.setIsActive(false);
+            sensor.setLeftCyclesToRefresh(sensor.getSensorSettings().getCyclesToRefresh());
             isDeactivated = true;
         }
         sensorRepository.save(sensor);
@@ -53,7 +54,7 @@ public class MeasurementExecutionService {
     }
 
     public List<Sensor> findSensorsToMeasure(MeasurementsFrequency measurementsFrequency) {
-        return sensorRepository.findAllByMeasurementsFrequencyAndIsActive(measurementsFrequency, true);
+        return sensorRepository.findAllByMeasurementsFrequencyAndIsActiveOrLeftCyclesToRefresh(measurementsFrequency, true, 0);
     }
 
     public int getDefaultSensorTimeout() {

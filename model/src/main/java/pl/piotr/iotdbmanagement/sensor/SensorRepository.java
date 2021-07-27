@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface SensorRepository extends JpaRepository<Sensor, Long> {
 
-    List<Sensor> findAllByMeasurementsFrequencyAndIsActive(MeasurementsFrequency measurementsFrequency, Boolean activeState);
+    List<Sensor> findAllByMeasurementsFrequencyAndIsActiveOrLeftCyclesToRefresh(MeasurementsFrequency measurementsFrequency, Boolean activeState, Integer leftCyclesToRefresh);
 
     List<Sensor> findAllByMeasurementTypeAndMeasurementsFrequency(MeasurementType measurementType, MeasurementsFrequency measurementsFrequency);
 

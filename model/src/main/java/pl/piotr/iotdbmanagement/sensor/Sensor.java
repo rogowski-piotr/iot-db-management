@@ -39,6 +39,9 @@ public class Sensor implements Serializable {
     @Column(name = "consecutive_failures")
     private Integer consecutiveFailures;
 
+    @Column(name = "left_cycles_to_refresh")
+    private Integer leftCyclesToRefresh;
+
     @Column(name = "measurement_frequency")
     @Enumerated(EnumType.STRING)
     private MeasurementsFrequency measurementsFrequency;
