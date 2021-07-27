@@ -22,12 +22,12 @@ VALUES ((SELECT nextval ('place_id_sequence')), 'room_2');
 
 -- SENSOR_SETTINGS
 INSERT INTO sensor_settings (id, name, acceptable_consecutive_failures, cycles_to_refresh_activity, request_timeout)
-VALUES ((SELECT nextval ('sensor_settings_id_sequence')), 'default', 1, 2, 5000);
+VALUES ((SELECT nextval ('sensor_settings_id_sequence')), 'default', 1, 1, 5000);
 
 
 -- SENSORS
-INSERT INTO sensors (id, active, measurement_frequency, socket, measurement_type_id, place_id, consecutive_failures, sensor_settings_id, left_cycles_to_refresh)
-VALUES ((SELECT nextval ('sensor_id_sequence')), true, 'ONCE_PER_MINUTE', '192.168.0.19:50007', 4, 1, 0, 1, 0);
+INSERT INTO sensors (id, active, measurement_frequency, socket, measurement_type_id, place_id, consecutive_failures, sensor_settings_id, left_cycles_to_refresh, activity_verification)
+VALUES ((SELECT nextval ('sensor_id_sequence')), true, 'ONCE_PER_MINUTE', '192.168.0.19:50007', 4, 1, 0, 1, 0, false);
 
-INSERT INTO sensors (id, active, measurement_frequency, socket, measurement_type_id, place_id, consecutive_failures, sensor_settings_id, left_cycles_to_refresh)
-VALUES ((SELECT nextval ('sensor_id_sequence')), true, 'ONCE_PER_MINUTE', '192.168.0.20:50007', 1, 2, 0, 1, 0);
+INSERT INTO sensors (id, active, measurement_frequency, socket, measurement_type_id, place_id, consecutive_failures, sensor_settings_id, left_cycles_to_refresh, activity_verification)
+VALUES ((SELECT nextval ('sensor_id_sequence')), true, 'ONCE_PER_MINUTE', '192.168.0.20:50007', 1, 2, 0, 1, 0, false);

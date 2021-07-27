@@ -44,17 +44,30 @@ public class MeasurementExecutionService {
         sensor.setConsecutiveFailures(sensor.getConsecutiveFailures() + 1);
         int acceptableFailures = sensor.getSensorSettings().getAcceptableConsecutiveFailures();
 
-        if (sensor.getConsecutiveFailures() > acceptableFailures) {
+        if (sensor.getConsecutiveFailures() > acceptableFailures || sensor.getActivityVerification()) {
             sensor.setIsActive(false);
             sensor.setLeftCyclesToRefresh(sensor.getSensorSettings().getCyclesToRefresh());
+            sensor.setActivityVerification(false);
             isDeactivated = true;
         }
         sensorRepository.save(sensor);
         return isDeactivated;
     }
 
+    @Transactional
     public List<Sensor> findSensorsToMeasure(MeasurementsFrequency measurementsFrequency) {
-        return sensorRepository.findAllByMeasurementsFrequencyAndIsActiveOrLeftCyclesToRefresh(measurementsFrequency, true, 0);
+        List<Sensor> notActive = sensorRepository.findAllByMeasurementsFrequencyAndIsActive(measurementsFrequency, false);
+
+        notActive.forEach(sensor -> {
+            if (sensor.getLeftCyclesToRefresh() <= 0) {
+                sensor.setActivityVerification(true);
+            }
+            int leftCycles = sensor.getLeftCyclesToRefresh() == 0 ? 0 : sensor.getLeftCyclesToRefresh() - 1;
+            sensor.setLeftCyclesToRefresh(leftCycles);
+            sensorRepository.save(sensor);
+        });
+
+        return sensorRepository.findAllByMeasurementsFrequencyAndIsActiveOrActivityVerification(measurementsFrequency.toString());
     }
 
     public int getDefaultSensorTimeout() {
@@ -63,6 +76,17 @@ public class MeasurementExecutionService {
         } else {
             logger.warning("Can not find default settings for sensors, timeout set as 5000ms");
             return 5000;
+        }
+    }
+
+    @Transactional
+    public void verifyToActivate(Sensor sensor) {
+        if (! sensor.getIsActive()) {
+            sensor.setIsActive(true);
+            sensor.setActivityVerification(false);
+            sensor.setConsecutiveFailures(0);
+            sensor.setLeftCyclesToRefresh(0);
+            sensorRepository.save(sensor);
         }
     }
 

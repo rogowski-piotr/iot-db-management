@@ -42,6 +42,9 @@ public class Sensor implements Serializable {
     @Column(name = "left_cycles_to_refresh")
     private Integer leftCyclesToRefresh;
 
+    @Column(name = "activity_verification")
+    private Boolean activityVerification;
+
     @Column(name = "measurement_frequency")
     @Enumerated(EnumType.STRING)
     private MeasurementsFrequency measurementsFrequency;

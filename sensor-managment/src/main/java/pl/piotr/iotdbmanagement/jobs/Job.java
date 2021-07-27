@@ -27,6 +27,7 @@ public class Job implements Runnable {
             String response = connectWithSensor();
             List<Measurement> measurements = convertResponseToObject(response);
             measurements.forEach(measurement -> measurementExecutionService.addMeasurement(measurement));
+            measurementExecutionService.verifyToActivate(sensor);
             logger.info("data has been inserted");
         } catch (InterruptedException e) {
             logger.warning("Thread has been interrupted!");
