@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
-public class MeasurementSoilMoistureResponse {
+public class SoilMoistureResponse {
 
     private String sensor;
 
@@ -22,7 +22,7 @@ public class MeasurementSoilMoistureResponse {
 
     private Integer soilMoisture;
 
-    public static TriFunction<MeasurementSoilMoistureResponse, Sensor, LocalDateTime, Measurement> dtoToEntitySoilMoistureMapper() {
+    public static TriFunction<SoilMoistureResponse, Sensor, LocalDateTime, Measurement> dtoToEntitySoilMoistureMapper() {
         return (responseObj, sensor, dateTime) -> Measurement.builder()
                 .value(Float.valueOf(responseObj.getSoilMoisture()))
                 .measurementType(sensor.getMeasurementType())

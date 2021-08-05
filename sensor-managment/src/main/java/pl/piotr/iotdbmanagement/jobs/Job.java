@@ -1,101 +1,64 @@
 package pl.piotr.iotdbmanagement.jobs;
 
-import com.google.gson.Gson;
-import pl.piotr.iotdbmanagement.jobs.dto.MeasurementSoilMoistureResponse;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
-import pl.piotr.iotdbmanagement.jobs.dto.MeasurmentTemperatureAndHumidityResponse;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
-import pl.piotr.iotdbmanagement.service.MeasurementService;
-import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
-import pl.piotr.iotdbmanagement.service.SensorService;
+import pl.piotr.iotdbmanagement.service.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class Job implements Runnable {
+    private final int REQUEST_TIMEOUT;
     private Logger logger;
     private Sensor sensor;
-    private MeasurementService measurementService;
-    private SensorService sensorService;
-    private MeasurementTypeService measurementTypeService;
+    private MeasurementExecutionService measurementExecutionService;
 
-    protected Job(Sensor sensor, MeasurementService measurementService, SensorService sensorService, MeasurementTypeService measurementTypeService) {
+    protected Job(Sensor sensor, MeasurementExecutionService measurementExecutionService) {
         logger = Logger.getLogger("sensor at: " + sensor.getSocket());
+        this.REQUEST_TIMEOUT = sensor.getSensorSettings() != null ? sensor.getSensorSettings().getRequestTimeout() : measurementExecutionService.getDefaultSensorTimeout();
         this.sensor = sensor;
-        this.measurementService = measurementService;
-        this.sensorService = sensorService;
-        this.measurementTypeService = measurementTypeService;
+        this.measurementExecutionService = measurementExecutionService;
     }
 
     @Override
     public void run() {
-        logger.info("Trying connect to: " + sensor.getSocket());
-        String response;
-
-        try (Socket socket = new Socket(sensor.getAddress(), sensor.getPort())) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            response = reader.readLine();
-            reader.close();
-        } catch (IOException | NullPointerException e) {
-            logger.warning("Can not received data from: " + sensor.getSocket() + "; cause: " + e.getMessage());
-            sensor.setIsActive(false);
-            sensorService.update(sensor);
-            return;
+        try {
+            String response = connectWithSensor();
+            List<Measurement> measurements = convertResponseToObject(response);
+            measurements.forEach(measurement -> measurementExecutionService.addMeasurement(measurement));
+            measurementExecutionService.verifyToActivate(sensor);
+            logger.info("data has been inserted");
+        } catch (InterruptedException e) {
+            logger.warning("Thread has been interrupted!");
         }
-        logger.info("received data: " + response);
+    }
 
-        List<Measurement> measurements = new ArrayList<>();
-
-        switch (sensor.getMeasurementType().getType()) {
-            case "TEMPERATURE_AND_HUMIDITY":
-                logger.info("type classified as TEMPERATURE_AND_HUMIDITY");
-                MeasurmentTemperatureAndHumidityResponse responseTempHumi = new Gson()
-                        .fromJson(response, MeasurmentTemperatureAndHumidityResponse.class);
-                if (! responseTempHumi.getActive()) {
-                    sensor.setIsActive(false);
-                    sensorService.update(sensor);
-                    return;
-                }
-                measurements.add(
-                        MeasurmentTemperatureAndHumidityResponse.dtoToEntityTemperatureMapper()
-                                .apply(responseTempHumi, sensor, measurementTypeService.getTypeOfString("TEMPERATURE"), LocalDateTime.now())
-                );
-                measurements.add(
-                        MeasurmentTemperatureAndHumidityResponse.dtoToEntityHumidityMapper()
-                                .apply(responseTempHumi, sensor, measurementTypeService.getTypeOfString("HUMIDITY"), LocalDateTime.now())
-                );
-                break;
-
-            case "SOIL_MOISTURE":
-                logger.info("type classified as SOIL_MOISTURE");
-                MeasurementSoilMoistureResponse responseSoilMoisture = new Gson()
-                        .fromJson(response, MeasurementSoilMoistureResponse.class);
-                if (! responseSoilMoisture.getActive()) {
-                    sensor.setIsActive(false);
-                    sensorService.update(sensor);
-                    return;
-                }
-                measurements.add(
-                        MeasurementSoilMoistureResponse.dtoToEntitySoilMoistureMapper()
-                                .apply(responseSoilMoisture, sensor, LocalDateTime.now())
-                );
-                break;
-
-            default:
-                logger.info("type not classified");
-                return;
+    private void deactivateAndInterrupt() throws InterruptedException {
+        if (measurementExecutionService.verifyToDeactivate(sensor)) {
+            logger.info("aborting and deactivating sensor");
+        } else {
+            logger.info("aborting but sensor still active");
         }
+        throw new InterruptedException();
+    }
 
-        measurements
-                .forEach(measurment -> measurementService.create(measurment));
+    private String connectWithSensor() throws InterruptedException {
+        Connector connector = new Connector(sensor.getAddress(), sensor.getPort(), REQUEST_TIMEOUT);
+        String response = connector.connect();
+        if (connector.isFailed()) {
+            deactivateAndInterrupt();
+        }
+        return response;
+    }
 
-        logger.info("data has been inserted");
+    private List<Measurement> convertResponseToObject(String response) throws InterruptedException {
+        ResponseConverter converter = new ResponseConverter(response, measurementExecutionService, LocalDateTime.now(), sensor);
+        List<Measurement> convertedMeasurements = converter.convert();
+        if (converter.isFailed()) {
+            deactivateAndInterrupt();
+        }
+        return convertedMeasurements;
     }
 
 }
