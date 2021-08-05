@@ -13,13 +13,7 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
 
     List<Sensor> findAllByMeasurementsFrequencyAndIsActive(MeasurementsFrequency measurementsFrequency, Boolean activeState);
 
-    @Query(
-            nativeQuery = true,
-            value = "SELECT * " +
-                    "FROM sensors s " +
-                    "WHERE s.measurement_frequency = :measurement_frequency AND (s.active = true OR s.activity_verification = true)"
-    )
-    List<Sensor> findAllByMeasurementsFrequencyAndIsActiveOrActivityVerification(@Param("measurement_frequency") String measurementsFrequency);
+    List<Sensor> findAllByMeasurementsFrequencyAndIsActiveIsTrue(MeasurementsFrequency measurementsFrequency);
 
     List<Sensor> findAllByMeasurementTypeAndMeasurementsFrequency(MeasurementType measurementType, MeasurementsFrequency measurementsFrequency);
 

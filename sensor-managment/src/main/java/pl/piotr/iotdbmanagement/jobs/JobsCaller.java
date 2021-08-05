@@ -33,7 +33,6 @@ public class JobsCaller {
     private void call(MeasurementsFrequency measurementsFrequency) {
         logger.info("Job for: " + measurementsFrequency + " has been started");
         List<Sensor> sensors = measurementExecutionService.findSensorsToMeasure(measurementsFrequency);
-        logger.info("Found " + sensors.size() + " elements");
         sensors.forEach(
                 sensor -> executor.submit(new Job(sensor, measurementExecutionService))
         );

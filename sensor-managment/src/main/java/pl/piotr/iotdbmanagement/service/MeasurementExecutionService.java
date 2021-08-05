@@ -9,11 +9,15 @@ import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.measurementtype.MeasurementTypeRepository;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.sensor.SensorRepository;
-import pl.piotr.iotdbmanagement.sensorsettings.SensorSettings;
+import pl.piotr.iotdbmanagement.sensorfailure.SensorCurrentFailure;
+import pl.piotr.iotdbmanagement.sensorfailure.SensorFailureRepository;
 import pl.piotr.iotdbmanagement.sensorsettings.SensorSettingsRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class MeasurementExecutionService {
@@ -22,11 +26,16 @@ public class MeasurementExecutionService {
     private MeasurementRepository measurementRepository;
     private MeasurementTypeRepository measurementTypeRepository;
     private SensorRepository sensorRepository;
+    private SensorFailureRepository sensorFailureRepository;
 
-    public MeasurementExecutionService(MeasurementRepository measurementRepository, MeasurementTypeRepository measurementTypeRepository, SensorRepository sensorRepository) {
+    public MeasurementExecutionService(MeasurementRepository measurementRepository, MeasurementTypeRepository measurementTypeRepository,
+                                       SensorRepository sensorRepository, SensorSettingsRepository sensorSettingsRepository,
+                                       SensorFailureRepository sensorFailureRepository) {
         this.measurementRepository = measurementRepository;
         this.measurementTypeRepository = measurementTypeRepository;
         this.sensorRepository = sensorRepository;
+        this.sensorSettingsRepository = sensorSettingsRepository;
+        this.sensorFailureRepository = sensorFailureRepository;
     }
 
     public MeasurementType getMeasurementTypeByString(String type) {
@@ -41,33 +50,42 @@ public class MeasurementExecutionService {
     @Transactional
     public boolean verifyToDeactivate(Sensor sensor) {
         boolean isDeactivated = false;
-        sensor.setConsecutiveFailures(sensor.getConsecutiveFailures() + 1);
-        int acceptableFailures = sensor.getSensorSettings().getAcceptableConsecutiveFailures();
+        Optional<SensorCurrentFailure> sensorFailureOptional = sensorFailureRepository.findFirstBySensor(sensor);
+        SensorCurrentFailure sensorCurrentFailure = sensorFailureOptional.orElseGet(() -> new SensorCurrentFailure(sensor));
+        sensorCurrentFailure.incrementConsecutiveFailures();
 
-        if (sensor.getConsecutiveFailures() > acceptableFailures || sensor.getActivityVerification()) {
+        int acceptableFailures = sensor.getSensorSettings().getAcceptableConsecutiveFailures();
+        if (sensorCurrentFailure.getConsecutiveFailures() >= acceptableFailures || sensorCurrentFailure.getActivityVerification()) {
             sensor.setIsActive(false);
-            sensor.setLeftCyclesToRefresh(sensor.getSensorSettings().getCyclesToRefresh());
-            sensor.setActivityVerification(false);
+            sensorCurrentFailure.setLeftCyclesToRefresh(sensor.getSensorSettings().getCyclesToRefresh());
+            sensorCurrentFailure.setActivityVerification(false);
             isDeactivated = true;
+            sensorRepository.save(sensor);
         }
-        sensorRepository.save(sensor);
+
+        sensorFailureRepository.save(sensorCurrentFailure);
         return isDeactivated;
     }
 
     @Transactional
     public List<Sensor> findSensorsToMeasure(MeasurementsFrequency measurementsFrequency) {
-        List<Sensor> notActive = sensorRepository.findAllByMeasurementsFrequencyAndIsActive(measurementsFrequency, false);
+        List<Sensor> notActiveSensors = sensorRepository.findAllByMeasurementsFrequencyAndIsActive(measurementsFrequency, false);
 
-        notActive.forEach(sensor -> {
-            if (sensor.getLeftCyclesToRefresh() <= 0) {
-                sensor.setActivityVerification(true);
+        notActiveSensors.forEach(sensor -> {
+            Optional<SensorCurrentFailure> sensorFailureOptional = sensorFailureRepository.findFirstBySensor(sensor);
+            SensorCurrentFailure sensorCurrentFailure = sensorFailureOptional.orElseGet(() -> new SensorCurrentFailure(sensor));
+            if (sensorCurrentFailure.getLeftCyclesToRefresh() <= 0) {
+                sensorCurrentFailure.setActivityVerification(true);
             }
-            int leftCycles = sensor.getLeftCyclesToRefresh() == 0 ? 0 : sensor.getLeftCyclesToRefresh() - 1;
-            sensor.setLeftCyclesToRefresh(leftCycles);
-            sensorRepository.save(sensor);
+            sensorCurrentFailure.decrementLeftCycleToRefresh();
+            sensorFailureRepository.save(sensorCurrentFailure);
         });
 
-        return sensorRepository.findAllByMeasurementsFrequencyAndIsActiveOrActivityVerification(measurementsFrequency.toString());
+        List<Sensor> sensorsToBeVerified = sensorFailureRepository.findAllByActivityVerificationTrue()
+                .stream().map(SensorCurrentFailure::getSensor).collect(Collectors.toList());
+        List<Sensor> sensorsActive = sensorRepository.findAllByMeasurementsFrequencyAndIsActiveIsTrue(measurementsFrequency);
+        logger.info("Found sensors: " + sensorsActive.size() + " active, " + sensorsToBeVerified.size() + " to verify");
+        return Stream.concat(sensorsToBeVerified.stream(), sensorsActive.stream()).collect(Collectors.toList());
     }
 
     public int getDefaultSensorTimeout() {
@@ -83,10 +101,10 @@ public class MeasurementExecutionService {
     public void verifyToActivate(Sensor sensor) {
         if (! sensor.getIsActive()) {
             sensor.setIsActive(true);
-            sensor.setActivityVerification(false);
-            sensor.setConsecutiveFailures(0);
-            sensor.setLeftCyclesToRefresh(0);
             sensorRepository.save(sensor);
+            Optional<SensorCurrentFailure> sensorFailureOptional = sensorFailureRepository.findFirstBySensor(sensor);
+            SensorCurrentFailure sensorCurrentFailure = sensorFailureOptional.orElseGet(() -> new SensorCurrentFailure(sensor));
+            sensorFailureRepository.delete(sensorCurrentFailure);
         }
     }
 
