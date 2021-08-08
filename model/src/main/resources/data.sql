@@ -1,3 +1,19 @@
+-- ROLES
+INSERT INTO roles (id, name)
+VALUES ((SELECT nextval ('roles_id_sequence')), 'ADMIN');
+
+INSERT INTO roles (id, name)
+VALUES ((SELECT nextval ('roles_id_sequence')), 'USER');
+
+
+-- USERS
+INSERT INTO users (id, name, surname, email, password, role_id)
+VALUES ((SELECT nextval ('users_id_sequence')), 'admin', '', 'admin@example.com', 'admin', 1);
+
+INSERT INTO users (id, name, surname, email, password, role_id)
+VALUES ((SELECT nextval ('users_id_sequence')), 'Jan', 'Kowalski', 'jan@example.com', 'secret', 2);
+
+
 -- MEASUREMENTS TYPES
 INSERT INTO measurment_types (id, type)
 VALUES ((SELECT nextval ('measurement_type_id_sequence')), 'TEMPERATURE_AND_HUMIDITY');
