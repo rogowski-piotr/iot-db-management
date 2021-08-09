@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/sensors")
+@RequestMapping("api_auth/sensors")
 public class SensorController {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private SensorService sensorService;
