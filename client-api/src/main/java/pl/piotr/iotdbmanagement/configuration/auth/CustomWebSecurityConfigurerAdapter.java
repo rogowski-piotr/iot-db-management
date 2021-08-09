@@ -29,6 +29,7 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
 
         http
                 .httpBasic()
+                .authenticationEntryPoint(authenticationEntryPoint)
                     .and()
                 .authorizeRequests()
                     .antMatchers("/api/sensors/**").permitAll()

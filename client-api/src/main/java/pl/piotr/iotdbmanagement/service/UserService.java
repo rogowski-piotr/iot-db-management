@@ -6,11 +6,11 @@ import pl.piotr.iotdbmanagement.user.User;
 import pl.piotr.iotdbmanagement.user.UserRepository;
 
 @Service
-public class AuthService {
+public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    public AuthService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
