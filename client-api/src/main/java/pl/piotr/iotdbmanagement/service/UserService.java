@@ -7,6 +7,8 @@ import pl.piotr.iotdbmanagement.configuration.auth.PasswordMD5Encoder;
 import pl.piotr.iotdbmanagement.user.User;
 import pl.piotr.iotdbmanagement.user.UserRepository;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private UserRepository userRepository;
@@ -27,6 +29,10 @@ public class UserService {
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElse(null);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
 }
