@@ -28,14 +28,16 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
         http.headers().frameOptions().disable();
 
         http
-                .httpBasic()
-                .authenticationEntryPoint(authenticationEntryPoint)
-                    .and()
                 .authorizeRequests()
-                    .antMatchers("/api/sensors/**").permitAll()
+
+                    .antMatchers("/api_auth/users").hasAuthority("ADMIN")
+                    .antMatchers("/api_auth/users/**").hasAuthority("ADMIN")
+
+                    .antMatchers("/api_auth").authenticated()
+                    .antMatchers("/api_auth/**").authenticated()
+
+                    .anyRequest().permitAll()
                     .and()
-                .authorizeRequests()
-                    .antMatchers("/api/places/**").hasAuthority("ADMIN")
-                    .anyRequest().authenticated();
+                .httpBasic();
     }
 }

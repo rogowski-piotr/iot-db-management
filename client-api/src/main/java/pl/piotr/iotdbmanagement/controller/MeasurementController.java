@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/measurements")
+@RequestMapping("api_auth/measurements")
 public class MeasurementController {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private MeasurementService measurementService;

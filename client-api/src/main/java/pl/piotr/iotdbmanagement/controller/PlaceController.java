@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/places")
+@RequestMapping("api_auth/places")
 public class PlaceController {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private PlaceService placeService;
