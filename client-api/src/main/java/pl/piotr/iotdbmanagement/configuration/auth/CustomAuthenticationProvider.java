@@ -1,33 +1,38 @@
 package pl.piotr.iotdbmanagement.configuration.auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.piotr.iotdbmanagement.service.AuthService;
+import pl.piotr.iotdbmanagement.service.UserService;
 import pl.piotr.iotdbmanagement.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-    private AuthService authService;
+    private UserService userService;
+    private PasswordEncoder passwordEncoder;
 
-    public CustomAuthenticationProvider(AuthService authService) {
-        this.authService = authService;
+    @Autowired
+    public CustomAuthenticationProvider(UserService userService, PasswordMD5Encoder passwordEncoder) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
+        String encodedPassword = passwordEncoder.encode(password);
 
-        User user = authService.findUserByEmail(username);
-        if (user == null || !user.getPassword().equals(password)) {
+        User user = userService.findUserByEmail(username);
+        if (user == null || !user.getPassword().equals(encodedPassword)) {
             return null;
         }
 
