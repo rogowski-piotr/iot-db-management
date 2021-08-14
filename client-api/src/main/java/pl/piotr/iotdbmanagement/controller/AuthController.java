@@ -2,36 +2,44 @@ package pl.piotr.iotdbmanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.piotr.iotdbmanagement.configuration.auth.CustomAuthenticationProvider;
+import pl.piotr.iotdbmanagement.dto.user.LoginUserRequest;
 import pl.piotr.iotdbmanagement.dto.user.RegisterUserRequest;
 import pl.piotr.iotdbmanagement.service.RoleService;
 import pl.piotr.iotdbmanagement.service.UserService;
 import pl.piotr.iotdbmanagement.user.User;
 
 import javax.validation.Valid;
-
 import java.util.logging.Logger;
 
-@Validated
 @RestController
-@RequestMapping("api/users")
-public class UserController {
+@RequestMapping
+public class AuthController {
     private Logger logger = Logger.getLogger(this.getClass().getName());
+    private CustomAuthenticationProvider authenticationProvider;
     private UserService userService;
     private RoleService roleService;
 
     @Autowired
-    public UserController(UserService userService, RoleService roleService) {
+    public AuthController(CustomAuthenticationProvider authenticationProvider, UserService userService, RoleService roleService) {
+        this.authenticationProvider = authenticationProvider;
         this.userService = userService;
         this.roleService = roleService;
     }
 
-    @PostMapping
+    @PostMapping("login")
+    public ResponseEntity getAvailableTypes(@Valid @RequestBody LoginUserRequest request, UriComponentsBuilder builder) {
+        try {
+            if (authenticationProvider.authenticate(LoginUserRequest.dtoToAuthMapper().apply(request)).isAuthenticated()) {
+                return ResponseEntity.ok().build();
+            }
+        } catch (Exception ignore) {}
+        return ResponseEntity.status(401).build();
+    }
+
+    @PostMapping("register")
     public ResponseEntity createUser(@Valid @RequestBody RegisterUserRequest request, UriComponentsBuilder builder) {
         logger.info("CREATE USER: " + request);
         if (userService.findUserByEmail(request.getEmail()) != null) {
