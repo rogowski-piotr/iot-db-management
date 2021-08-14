@@ -24,11 +24,8 @@ public class User {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "surname")
-    private String surname;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "email", unique = true)
     private String email;

@@ -7,11 +7,11 @@ VALUES ((SELECT nextval ('roles_id_sequence')), 'USER');
 
 
 -- USERS
-INSERT INTO users (id, name, surname, email, password, role_id)
-VALUES ((SELECT nextval ('users_id_sequence')), 'admin', '', 'admin@example.com', '21232f297a57a5a743894a0e4a801fc3', 1); --password: admin
+INSERT INTO users (id, username, email, password, role_id)
+VALUES ((SELECT nextval ('users_id_sequence')), 'admin', 'admin@example.com', '21232f297a57a5a743894a0e4a801fc3', 1); --password: admin
 
-INSERT INTO users (id, name, surname, email, password, role_id)
-VALUES ((SELECT nextval ('users_id_sequence')), 'Jan', 'Kowalski', 'jan@example.com', '5ebe2294ecd0e0f08eab7690d2a6ee69', 2); -- password: secret
+INSERT INTO users (id, username, email, password, role_id)
+VALUES ((SELECT nextval ('users_id_sequence')), 'Grzegorz Brzęczyszczykiewicz', 'Grzegorz@example.com', '5ebe2294ecd0e0f08eab7690d2a6ee69', 2); -- password: secret
 
 
 -- MEASUREMENTS TYPES
