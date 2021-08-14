@@ -24,7 +24,7 @@ public class GetUsersResponse {
     public static class User {
         private Long id;
 
-        private String name;
+        private String username;
 
         private String surname;
 
@@ -50,8 +50,7 @@ public class GetUsersResponse {
             return users.stream()
                     .map(user -> User.builder()
                             .id(user.getId())
-                            .name(user.getName())
-                            .surname(user.getSurname())
+                            .username(user.getUsername())
                             .email(user.getEmail())
                             .role(
                                     GetUsersResponse.Role.builder()

@@ -20,9 +20,7 @@ public class RegisterUserRequest {
 
     @NotBlank(message = "can not be empty")
     @NotEmpty(message = "can not be empty")
-    private String name;
-
-    private String surname;
+    private String username;
 
     @NotEmpty(message = "can not be empty")
     @Email(message = "must be a valid e-mail address")
@@ -34,8 +32,7 @@ public class RegisterUserRequest {
 
     public static Function<RegisterUserRequest, User> dtoToEntityMapper() {
         return request -> User.builder()
-                        .name(request.getName())
-                        .surname(request.getSurname())
+                        .username(request.getUsername())
                         .email(request.getEmail())
                         .password(request.getPassword())
                         .build();
