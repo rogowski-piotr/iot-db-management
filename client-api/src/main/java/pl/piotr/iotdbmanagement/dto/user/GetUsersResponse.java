@@ -26,8 +26,6 @@ public class GetUsersResponse {
 
         private String username;
 
-        private String surname;
-
         private String email;
 
         private Role role;
