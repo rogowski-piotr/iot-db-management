@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import pl.piotr.iotdbmanagement.configuration.auth.CustomAuthenticationProvider;
+import pl.piotr.iotdbmanagement.dto.user.AuthUserResponse;
 import pl.piotr.iotdbmanagement.dto.user.LoginUserRequest;
 import pl.piotr.iotdbmanagement.dto.user.RegisterUserRequest;
 import pl.piotr.iotdbmanagement.service.RoleService;
@@ -30,10 +31,12 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity getAvailableTypes(@Valid @RequestBody LoginUserRequest request, UriComponentsBuilder builder) {
+    public ResponseEntity<AuthUserResponse> getAvailableTypes(@Valid @RequestBody LoginUserRequest request, UriComponentsBuilder builder) {
+        logger.info("Trying login: " + request.toString());
         try {
             if (authenticationProvider.authenticate(LoginUserRequest.dtoToAuthMapper().apply(request)).isAuthenticated()) {
-                return ResponseEntity.ok().build();
+                User user = userService.findUserByEmail(request.getName());
+                return ResponseEntity.ok(AuthUserResponse.entityToDtoMapper().apply(user));
             }
         } catch (Exception ignore) {}
         return ResponseEntity.status(401).build();
