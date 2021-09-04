@@ -31,6 +31,9 @@ public class Sensor implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "socket")
     private String socket;
 

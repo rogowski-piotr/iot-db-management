@@ -24,9 +24,13 @@ public class GetSensorsResponse {
     public static class Sensor {
         private Long id;
 
+        private String name;
+
         private String socket;
 
         private Boolean isActive;
+
+        private String measurementType;
     }
 
     public static Function<Collection<pl.piotr.iotdbmanagement.sensor.Sensor>, Iterable<Sensor>> entityToDtoMapper() {
@@ -34,8 +38,10 @@ public class GetSensorsResponse {
             return sensors.stream()
                     .map(sensor -> Sensor.builder()
                             .id(sensor.getId())
+                            .name(sensor.getName())
                             .socket(sensor.getSocket())
                             .isActive(sensor.getIsActive())
+                            .measurementType(sensor.getMeasurementType().getType())
                             .build())
                     .collect(Collectors.toList());
         };

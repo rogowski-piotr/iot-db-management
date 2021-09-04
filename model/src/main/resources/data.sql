@@ -42,8 +42,8 @@ VALUES ((SELECT nextval ('sensor_settings_id_sequence')), 'default', 2, 1, 5000)
 
 
 -- SENSORS
-INSERT INTO sensors (id, active, measurement_frequency, socket, place_id, measurement_type_id, sensor_settings_id)
-VALUES ((SELECT nextval ('sensor_id_sequence')), true, 'ONCE_PER_MINUTE', '192.168.0.19:50007', 1, 4, 1);
+INSERT INTO sensors (id, name, active, measurement_frequency, socket, place_id, measurement_type_id, sensor_settings_id)
+VALUES ((SELECT nextval ('sensor_id_sequence')), 'sensor 1', true, 'ONCE_PER_MINUTE', '192.168.0.19:50007', 1, 4, 1);
 
-INSERT INTO sensors (id, active, measurement_frequency, socket, place_id, measurement_type_id, sensor_settings_id)
-VALUES ((SELECT nextval ('sensor_id_sequence')), true, 'ONCE_PER_MINUTE', '192.168.0.20:50007', 2, 1, 1);
+INSERT INTO sensors (id, name, active, measurement_frequency, socket, place_id, measurement_type_id, sensor_settings_id)
+VALUES ((SELECT nextval ('sensor_id_sequence')), 'sensor 2', true, 'ONCE_PER_MINUTE', '192.168.0.20:50007', 2, 1, 1);

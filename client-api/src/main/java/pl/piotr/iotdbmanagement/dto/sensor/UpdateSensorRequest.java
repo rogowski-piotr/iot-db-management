@@ -19,6 +19,8 @@ public class UpdateSensorRequest {
 
     private String socket;
 
+    private String name;
+
     private Boolean isActive;
 
     private String measurementType;
@@ -30,6 +32,7 @@ public class UpdateSensorRequest {
     public static QuadriFunction<Sensor, UpdateSensorRequest, Place, MeasurementType, Sensor> dtoToEntityUpdater() {
         return (sensor, request, place, measurementType) -> {
             sensor.setSocket(request.getSocket());
+            sensor.setName(request.getName());
             sensor.setIsActive(request.getIsActive());
             sensor.setMeasurementType(measurementType);
             sensor.setMeasurementsFrequency(request.getMeasurementsFrequency());

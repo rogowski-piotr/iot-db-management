@@ -18,6 +18,8 @@ public class CreateSensorRequest {
 
     private String socket;
 
+    private String name;
+
     private String measurementType;
 
     private MeasurementsFrequency measurementsFrequency;
@@ -28,6 +30,7 @@ public class CreateSensorRequest {
         return (request, place, type) ->
                 Sensor.builder()
                     .socket(request.getSocket())
+                    .name(request.getName())
                     .measurementType(type)
                     .isActive(true)
                     .measurementsFrequency(request.getMeasurementsFrequency())
