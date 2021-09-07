@@ -34,3 +34,9 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
+
+  front-end:
+    image: 'node:12'
+    container_name: front-end
+    ports:
+      - "80:80"
