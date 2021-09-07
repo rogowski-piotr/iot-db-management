@@ -21,8 +21,8 @@ $ mkdir /home/pi/workspace
 $ cd /home/pi/workspace
 $ git init
 $ git remote add origin https://github.com/rogowski-piotr/iot-db-management.git
-$ git fetch origin configure-test-env
-$ git checkout origin/configure-test-env -- test-env/
+$ git fetch origin master
+$ git checkout origin/master -- test-env/
 $ mv test-env/* .
 $ rm -rf test-env/
 $ chmod +x reload.sh
