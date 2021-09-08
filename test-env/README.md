@@ -26,21 +26,28 @@ $ git checkout origin/master -- test-env/
 $ mv test-env/* .
 $ rm -rf test-env/
 $ chmod +x reload.sh
+$ chmod +x reload_frontend.sh
 ```
 
-#### 3. Build Docker environment
+#### 2. Fetch frontend repository
 ```shell script
-$ docker build --rm -t test-env .
+$ git clone https://github.com/rogowski-piotr/iot-management-vue.git
+```
+
+#### 3. Build and run Docker environment
+```shell script
+$ docker build --rm -t node-env -f Dockerfile-node-env .
+$ docker build --rm -t test-env -f Dockerfile-java-env .
 $ docker-compose up
 ```
 
-#### 5. Fix date in containers
+#### 4. Fix date in containers
 ```shell script
 $ docker exec -it sensor-managment date -s 'yyyy-MM-dd HH:mm:ss'
 $ docker exec -it client-api date -s 'yyyy-MM-dd HH:mm:ss'
 ```
 
-#### 6. Add schema in postgres
+#### 5. Add schema in postgres
 ```shell script
 $ PGPASSWORD=postgres psql -h localhost -p 5432 -U root postgres
 =# CREATE SCHEMA sensors;

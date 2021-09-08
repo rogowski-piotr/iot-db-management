@@ -36,7 +36,10 @@ services:
       - "5432:5432"
 
   front-end:
-    image: 'node:12'
+    image: 'node-env:latest'
     container_name: front-end
+    volumes:
+      - /home/pi/workspace:/app
     ports:
       - "80:80"
+    command: './reload_frontend.sh'

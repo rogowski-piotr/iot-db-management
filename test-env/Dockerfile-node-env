@@ -1,0 +1,17 @@
+FROM test-env:latest
+
+EXPOSE 80
+
+WORKDIR /app
+
+RUN sudo apt-get update \
+        && apt-get clean -y \
+        && apt-get install curl -y \
+        && apt-get dist-upgrade -y \
+        && curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - \
+        && sudo apt-get install -y nodejs \
+        && sudo apt-get install -y npm \
+        && sudo npm i npm@latest -g \
+        && sudo npm install -g @vue/cli \
+        && apt-get update \
+        && apt-get clean -y
