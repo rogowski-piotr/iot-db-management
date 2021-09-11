@@ -34,6 +34,8 @@ public class GetMeasurementsResponse {
 
         private LocalDateTime date;
 
+        private String sensorName;
+
     }
 
     public static Function<Collection<pl.piotr.iotdbmanagement.measurement.Measurement>, Iterable<GetMeasurementsResponse.Measurement>> entityToDtoMapper() {
@@ -44,6 +46,7 @@ public class GetMeasurementsResponse {
                             .value(measurement.getValue())
                             .measurementType(measurement.getMeasurementType().getType())
                             .date(measurement.getDate())
+                            .sensorName(measurement.getSensor().getName())
                             .build())
                     .collect(Collectors.toList());
         };
