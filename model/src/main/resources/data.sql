@@ -47,3 +47,18 @@ VALUES ((SELECT nextval ('sensor_id_sequence')), 'sensor 1', true, 'ONCE_PER_MIN
 
 INSERT INTO sensors (id, name, active, measurement_frequency, socket, place_id, measurement_type_id, sensor_settings_id)
 VALUES ((SELECT nextval ('sensor_id_sequence')), 'sensor 2', true, 'ONCE_PER_MINUTE', '192.168.0.20:50007', 2, 1, 1);
+
+
+-- MEASUREMENTS
+INSERT INTO sensors.measurments (id, date, measurement_type_id, place_id, sensor_id, value) values ((SELECT uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)), (select date_trunc('second', (SELECT NOW() + (-1 * (interval '1 minutes'))))), 4, 1, 1, (SELECT random() * 15 + 10));
+INSERT INTO sensors.measurments (id, date, measurement_type_id, place_id, sensor_id, value) values ((SELECT uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)), (select date_trunc('second', (SELECT NOW() + (-2 * (interval '1 minutes'))))), 4, 1, 1, (SELECT random() * 15 + 10));
+INSERT INTO sensors.measurments (id, date, measurement_type_id, place_id, sensor_id, value) values ((SELECT uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)), (select date_trunc('second', (SELECT NOW() + (-3 * (interval '1 minutes'))))), 4, 1, 1, (SELECT random() * 15 + 10));
+
+INSERT INTO sensors.measurments (id, date, measurement_type_id, place_id, sensor_id, value) values ((SELECT uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)), (select date_trunc('second', (SELECT NOW() + (-1 * (interval '1 minutes'))))), 3, 1, 2, (SELECT random() * 15 + 10));
+INSERT INTO sensors.measurments (id, date, measurement_type_id, place_id, sensor_id, value) values ((SELECT uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)), (select date_trunc('second', (SELECT NOW() + (-1 * (interval '1 minutes'))))), 2, 1, 2, (SELECT random() * 15 + 10));
+
+INSERT INTO sensors.measurments (id, date, measurement_type_id, place_id, sensor_id, value) values ((SELECT uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)), (select date_trunc('second', (SELECT NOW() + (-2 * (interval '1 minutes'))))), 3, 1, 2, (SELECT random() * 15 + 10));
+INSERT INTO sensors.measurments (id, date, measurement_type_id, place_id, sensor_id, value) values ((SELECT uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)), (select date_trunc('second', (SELECT NOW() + (-2 * (interval '1 minutes'))))), 2, 1, 2, (SELECT random() * 15 + 10));
+
+INSERT INTO sensors.measurments (id, date, measurement_type_id, place_id, sensor_id, value) values ((SELECT uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)), (select date_trunc('second', (SELECT NOW() + (-3 * (interval '1 minutes'))))), 3, 1, 2, (SELECT random() * 15 + 10));
+INSERT INTO sensors.measurments (id, date, measurement_type_id, place_id, sensor_id, value) values ((SELECT uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)), (select date_trunc('second', (SELECT NOW() + (-3 * (interval '1 minutes'))))), 2, 1, 2, (SELECT random() * 15 + 10));
