@@ -27,6 +27,7 @@ $ mv test-env/* .
 $ rm -rf test-env/
 $ chmod +x reload.sh
 $ chmod +x reload_frontend.sh
+$ chmod +x reload_backend.sh
 ```
 
 #### 2. Fetch frontend repository
