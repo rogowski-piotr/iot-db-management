@@ -2,6 +2,7 @@ package pl.piotr.iotdbmanagement.sensor;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.piotr.iotdbmanagement.connectionstats.ConnectionStats;
 import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
@@ -69,6 +70,10 @@ public class Sensor implements Serializable {
     @ToString.Exclude
     @OneToOne(mappedBy = "sensor")
     private SensorCurrentFailure failure;
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "sensor")
+    private ConnectionStats connectionStats;
 
 
     @PreRemove
