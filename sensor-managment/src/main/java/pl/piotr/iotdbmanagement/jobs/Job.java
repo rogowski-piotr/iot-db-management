@@ -28,9 +28,11 @@ public class Job implements Runnable {
             List<Measurement> measurements = convertResponseToObject(response);
             measurements.forEach(measurement -> measurementExecutionService.addMeasurement(measurement));
             measurementExecutionService.verifyToActivate(sensor);
+            measurementExecutionService.addSuccessfulStats(sensor);
             logger.info("data has been inserted");
         } catch (InterruptedException e) {
             logger.warning("Thread has been interrupted!");
+            measurementExecutionService.addFailureStats(sensor);
         }
     }
 

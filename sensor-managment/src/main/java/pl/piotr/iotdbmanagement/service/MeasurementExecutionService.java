@@ -2,6 +2,8 @@ package pl.piotr.iotdbmanagement.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.piotr.iotdbmanagement.connectionstats.ConnectionStats;
+import pl.piotr.iotdbmanagement.connectionstats.ConnectionStatsRepository;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
 import pl.piotr.iotdbmanagement.measurement.MeasurementRepository;
@@ -27,15 +29,17 @@ public class MeasurementExecutionService {
     private MeasurementTypeRepository measurementTypeRepository;
     private SensorRepository sensorRepository;
     private SensorFailureRepository sensorFailureRepository;
+    private ConnectionStatsRepository connectionStatsRepository;
 
     public MeasurementExecutionService(MeasurementRepository measurementRepository, MeasurementTypeRepository measurementTypeRepository,
                                        SensorRepository sensorRepository, SensorSettingsRepository sensorSettingsRepository,
-                                       SensorFailureRepository sensorFailureRepository) {
+                                       SensorFailureRepository sensorFailureRepository, ConnectionStatsRepository connectionStatsRepository) {
         this.measurementRepository = measurementRepository;
         this.measurementTypeRepository = measurementTypeRepository;
         this.sensorRepository = sensorRepository;
         this.sensorSettingsRepository = sensorSettingsRepository;
         this.sensorFailureRepository = sensorFailureRepository;
+        this.connectionStatsRepository = connectionStatsRepository;
     }
 
     public MeasurementType getMeasurementTypeByString(String type) {
@@ -106,6 +110,38 @@ public class MeasurementExecutionService {
             SensorCurrentFailure sensorCurrentFailure = sensorFailureOptional.orElseGet(() -> new SensorCurrentFailure(sensor));
             sensorFailureRepository.delete(sensorCurrentFailure);
         }
+    }
+
+    @Transactional
+    public void addSuccessfulStats(Sensor sensor) {
+        Optional<ConnectionStats> connectionStatsOptional = connectionStatsRepository.findBySensor(sensor);
+        connectionStatsOptional.ifPresentOrElse(
+                connectionStats ->
+                        connectionStats.setSuccessfulConnections(connectionStats.getSuccessfulConnections() + 1),
+                () -> {
+                    ConnectionStats connectionStats = new ConnectionStats();
+                    connectionStats.setSensor(sensor);
+                    connectionStats.setFailureConnections(0);
+                    connectionStats.setSuccessfulConnections(1);
+                    connectionStatsRepository.save(connectionStats);
+                }
+        );
+    }
+
+    @Transactional
+    public void addFailureStats(Sensor sensor) {
+        Optional<ConnectionStats> connectionStatsOptional = connectionStatsRepository.findBySensor(sensor);
+        connectionStatsOptional.ifPresentOrElse(
+                connectionStats ->
+                        connectionStats.setFailureConnections(connectionStats.getFailureConnections() + 1),
+                () -> {
+                    ConnectionStats connectionStats = new ConnectionStats();
+                    connectionStats.setSensor(sensor);
+                    connectionStats.setFailureConnections(1);
+                    connectionStats.setSuccessfulConnections(0);
+                    connectionStatsRepository.save(connectionStats);
+                }
+        );
     }
 
 }
