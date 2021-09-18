@@ -44,4 +44,46 @@ public class JobsCaller {
         call(MeasurementsFrequency.ONCE_PER_MINUTE);
     }
 
+    @Async
+    @Scheduled(cron = "0 0/5 * * * ?", zone = "Europe/Warsaw")
+    public void jobOncePerFiveMinutes() {
+        call(MeasurementsFrequency.ONCE_PER_FIVE_MINUTES);
+    }
+
+    @Async
+    @Scheduled(cron = "0 0/15 * * * ?", zone = "Europe/Warsaw")
+    public void jobOncePerFifteenMinutes() {
+        call(MeasurementsFrequency.ONCE_PER_FIFTEEN_MINUTES);
+    }
+
+    @Async
+    @Scheduled(cron = "0 0/30 * * * ?", zone = "Europe/Warsaw")
+    public void jobOncePerThirtyMinutes() {
+        call(MeasurementsFrequency.ONCE_PER_THIRTY_MINUTES);
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 0/1 * * ?", zone = "Europe/Warsaw")
+    public void jobOncePerHour() {
+        call(MeasurementsFrequency.ONCE_PER_HOUR);
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 0/3 * * ?", zone = "Europe/Warsaw")
+    public void jobOncePerThreeHours() {
+        call(MeasurementsFrequency.ONCE_PER_THREE_HOURS);
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 0/12 * * ?", zone = "Europe/Warsaw")
+    public void jobOncePerTwelveHours() {
+        call(MeasurementsFrequency.ONCE_PER_TWELVE_HOURS);
+    }
+
+    /*@Async
+    @Scheduled(cron = "0 0 0 0/1 * ?", zone = "Europe/Warsaw")
+    public void jobOncePerDay() {
+        call(MeasurementsFrequency.ONCE_PER_DAY);
+    }*/
+
 }
