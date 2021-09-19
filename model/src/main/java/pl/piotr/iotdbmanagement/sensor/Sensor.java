@@ -68,11 +68,11 @@ public class Sensor implements Serializable {
     private List<Measurement> measurements;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "sensor")
+    @OneToOne(mappedBy = "sensor", cascade = CascadeType.ALL)
     private SensorCurrentFailure failure;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "sensor")
+    @OneToOne(mappedBy = "sensor", cascade = CascadeType.ALL)
     private ConnectionStats connectionStats;
 
 
