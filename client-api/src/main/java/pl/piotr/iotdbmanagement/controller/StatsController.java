@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.piotr.iotdbmanagement.dto.sensor.GetSensorResponse;
-import pl.piotr.iotdbmanagement.dto.sensor.GetSensorsResponse;
 import pl.piotr.iotdbmanagement.dto.stats.GetAllStatsResponse;
 import pl.piotr.iotdbmanagement.service.StatsService;
 import java.util.logging.Logger;
@@ -23,10 +21,10 @@ public class StatsController {
     }
 
     @GetMapping
-    public ResponseEntity<GetAllStatsResponse> getAllStats() {
-        logger.info("GET all stats");
-        int successConnections = statsService.getAllSuccessStats();
-        int successFailures = statsService.getAllFailuresStats();
+    public ResponseEntity<GetAllStatsResponse> getTodayStats() {
+        logger.info("GET all today stats");
+        int successConnections = statsService.getAllTodaySuccess();
+        int successFailures = statsService.getAllTodayFailures();
         return ResponseEntity.ok(GetAllStatsResponse.entityToDtoMapper().apply(successConnections, successFailures));
     }
 }

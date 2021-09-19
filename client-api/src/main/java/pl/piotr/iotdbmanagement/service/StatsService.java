@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.piotr.iotdbmanagement.connectionstats.ConnectionStats;
 import pl.piotr.iotdbmanagement.connectionstats.ConnectionStatsRepository;
 
+import java.time.LocalDate;
+
 @Service
 public class StatsService {
     private ConnectionStatsRepository connectionStatsRepository;
@@ -14,15 +16,15 @@ public class StatsService {
         this.connectionStatsRepository = connectionStatsRepository;
     }
 
-    public int getAllSuccessStats() {
-        return connectionStatsRepository.findAll()
+    public int getAllTodaySuccess() {
+        return connectionStatsRepository.findAllByDate(LocalDate.now())
                 .stream()
                 .mapToInt(ConnectionStats::getSuccessfulConnections)
                 .sum();
     }
 
-    public int getAllFailuresStats() {
-        return connectionStatsRepository.findAll()
+    public int getAllTodayFailures() {
+        return connectionStatsRepository.findAllByDate(LocalDate.now())
                 .stream()
                 .mapToInt(ConnectionStats::getFailureConnections)
                 .sum();

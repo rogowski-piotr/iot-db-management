@@ -15,6 +15,7 @@ import pl.piotr.iotdbmanagement.sensorfailure.SensorCurrentFailure;
 import pl.piotr.iotdbmanagement.sensorfailure.SensorFailureRepository;
 import pl.piotr.iotdbmanagement.sensorsettings.SensorSettingsRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -114,13 +115,14 @@ public class MeasurementExecutionService {
 
     @Transactional
     public void addSuccessfulStats(Sensor sensor) {
-        Optional<ConnectionStats> connectionStatsOptional = connectionStatsRepository.findBySensor(sensor);
+        Optional<ConnectionStats> connectionStatsOptional = connectionStatsRepository.findBySensorAndDate(sensor, LocalDate.now());
         connectionStatsOptional.ifPresentOrElse(
                 connectionStats ->
                         connectionStats.setSuccessfulConnections(connectionStats.getSuccessfulConnections() + 1),
                 () -> {
                     ConnectionStats connectionStats = new ConnectionStats();
                     connectionStats.setSensor(sensor);
+                    connectionStats.setDate(LocalDate.now());
                     connectionStats.setFailureConnections(0);
                     connectionStats.setSuccessfulConnections(1);
                     connectionStatsRepository.save(connectionStats);
@@ -130,13 +132,14 @@ public class MeasurementExecutionService {
 
     @Transactional
     public void addFailureStats(Sensor sensor) {
-        Optional<ConnectionStats> connectionStatsOptional = connectionStatsRepository.findBySensor(sensor);
+        Optional<ConnectionStats> connectionStatsOptional = connectionStatsRepository.findBySensorAndDate(sensor, LocalDate.now());
         connectionStatsOptional.ifPresentOrElse(
                 connectionStats ->
                         connectionStats.setFailureConnections(connectionStats.getFailureConnections() + 1),
                 () -> {
                     ConnectionStats connectionStats = new ConnectionStats();
                     connectionStats.setSensor(sensor);
+                    connectionStats.setDate(LocalDate.now());
                     connectionStats.setFailureConnections(1);
                     connectionStats.setSuccessfulConnections(0);
                     connectionStatsRepository.save(connectionStats);

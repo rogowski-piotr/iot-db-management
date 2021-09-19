@@ -5,6 +5,7 @@ import lombok.experimental.SuperBuilder;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -28,6 +29,9 @@ public class ConnectionStats {
 
     @Column(name = "failure_connections")
     private Integer failureConnections;
+
+    @Column(name = "date")
+    private LocalDate date;
 
     @ToString.Exclude
     @OneToOne
