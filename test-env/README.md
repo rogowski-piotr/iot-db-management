@@ -28,6 +28,7 @@ $ rm -rf test-env/
 $ chmod +x reload.sh
 $ chmod +x reload_frontend.sh
 $ chmod +x reload_backend.sh
+$ chmod +x sql/init_schema.sh
 ```
 
 #### 2. Fetch frontend repository
@@ -42,14 +43,14 @@ $ docker build --rm -t test-env -f Dockerfile-java-env .
 $ docker-compose up
 ```
 
-#### 4. Fix date in containers
+#### 4. Start backend app (requires .jar files)
+```shell script
+$ ./reload_backend.sh
+```
+
+#### 5. Fix date in containers
 ```shell script
 $ docker exec -it sensor-managment date -s 'yyyy-MM-dd HH:mm:ss'
 $ docker exec -it client-api date -s 'yyyy-MM-dd HH:mm:ss'
-```
-
-#### 5. Add schema in postgres
-```shell script
-$ PGPASSWORD=postgres psql -h localhost -p 5432 -U root postgres
-=# CREATE SCHEMA sensors;
+$ docker exec -it front-end date -s 'yyyy-MM-dd HH:mm:ss'
 ```

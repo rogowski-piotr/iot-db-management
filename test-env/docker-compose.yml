@@ -1,25 +1,25 @@
 services:
   client-api:
+    image: 'test-env:latest'
+    container_name: client-api
     privileged: true
     tty: true
-    image: 'test-env:latest'
     volumes:
-      - /home/pi/workspace:/app
+      - ./:/app
     ports:
       - 8080:8080
-    container_name: client-api
     depends_on:
       - postgres
     links:
       - postgres
 
   sensor-managment:
+    image: 'test-env:latest'
+    container_name: sensor-managment
     privileged: true
     tty: true
-    image: 'test-env:latest'
     volumes:
-      - /home/pi/workspace:/app
-    container_name: sensor-managment
+      - ./:/app
     depends_on:
       - postgres
     links:
@@ -32,6 +32,8 @@ services:
       - POSTGRES_ROOT_PASSWORD=postgres
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
 
@@ -39,7 +41,7 @@ services:
     image: 'node-env:latest'
     container_name: front-end
     volumes:
-      - /home/pi/workspace:/app
+      - ./:/app
     ports:
       - "80:80"
     command: './reload_frontend.sh'
