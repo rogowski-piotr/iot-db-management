@@ -28,6 +28,7 @@ $ rm -rf test-env/
 $ chmod +x reload.sh
 $ chmod +x reload_frontend.sh
 $ chmod +x reload_backend.sh
+$ chmod +x reset_db.sh
 $ chmod +x sql/init_schema.sh
 ```
 

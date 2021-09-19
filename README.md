@@ -1,7 +1,7 @@
 # <p align="center"> 💡 IoT management 💡 </p>
 > This is implementation of platform to management IoT sensors.
 
-## Table of Contents
+## Contents
 * [General Info](#general-information)
   * [Modules](#general-information)
   * [Security](#general-information)
@@ -14,7 +14,7 @@
 ## General Information
 ### 📁 Modules 📁
 * [client-api](client-api) - Provide Web API for client applications. Also allow performing CRUD operation
-* [model](model) - Shared module containing all application models
+* [model](model) - Shared module containing all application models and database configuration
 * [sensor-management](sensor-management) - Provides executing measurements on sensors
 * [sensors](sensors) - Contains documentation and code for each of the available sensors to be configured on the ESP8266 or ESP32 platform
 * [test-env](test-env) - Contains documentation and automation scripts to configure continuous integration on Raspberry pi environment
@@ -42,7 +42,11 @@ Main platform communicates with sensors using the TCP network protocol.
 
 
 ## Features
-
+wykonywanie pomiarów(tcp, przez arduino i treggered przez platforme)
+automatyczne wykrywanie dostępności czujnika
+konfigurowanie czujników (zmiana położenia, adresu, czestotliwosci pomiaru)
+konfigurowanie automatycznego wykrywania czujnika gdy jest nieaktywny
+Uzytkownicy oraz autowyzowany dostep
 
 ## Configuration
 
