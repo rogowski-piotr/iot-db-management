@@ -124,7 +124,7 @@ public class SensorControllerTest {
 
         // checking if sensor is deleted
         if (repository.findById(sensor.getId()).isEmpty()) {
-            assert false;
+            assert true;
         } else {
             assert false;
         }
