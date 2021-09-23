@@ -15,7 +15,7 @@ mvn install
 ```
 
 #### 2. Move to this localization and fetch all files
-if you want work in different localization change all path in all pom.xml files
+If you want work in different localization change all path in all pom.xml files
 ```shell script
 $ mkdir /home/pi/workspace
 $ cd /home/pi/workspace
@@ -32,24 +32,24 @@ $ chmod +x reset_db.sh
 $ chmod +x sql/init_schema.sh
 ```
 
-#### 2. Fetch frontend repository
+#### 3. Fetch frontend repository
 ```shell script
 $ git clone https://github.com/rogowski-piotr/iot-management-vue.git
 ```
 
-#### 3. Build and run Docker environment
+#### 4. Build and run Docker environment
 ```shell script
 $ docker build --rm -t node-env -f Dockerfile-node-env .
 $ docker build --rm -t test-env -f Dockerfile-java-env .
 $ docker-compose up
 ```
 
-#### 4. Start backend app (requires .jar files)
+#### 5. Start backend app (requires .jar files)
 ```shell script
 $ ./reload_backend.sh
 ```
 
-#### 5. Fix date in containers
+#### 6. Fix date in containers
 ```shell script
 $ docker exec -it sensor-managment date -s 'yyyy-MM-dd HH:mm:ss'
 $ docker exec -it client-api date -s 'yyyy-MM-dd HH:mm:ss'

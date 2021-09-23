@@ -1,13 +1,16 @@
 # <p align="center"> 🤖 Sensors 🤖 </p>
 <p align="justify">
-   Each folder contain information and source code that allow to obtain data from associated sensor.
+   Each folder contains information and source code that allows to obtain data from associated sensor.
    <br/>
    Codes has been validated on <a href="https://www.amazon.com/ARCELI-ESP8266-Development-Compatible-Arduino/dp/B07J2QKNHB">esp8266</a> and <a href="https://www.amazon.com/HiLetgo-ESP-32-Development-Bluetooth-Arduino/dp/B07WFZCBH8/ref=pd_lpo_1?pd_rd_i=B07WFZCBH8&psc=1">esp32</a> platforms.
    <br/>
    It's recommended to deploy programs using analog read on esp8266.
 </p>
 
-<br/>
+### Supported sensors:
+#### - [soil moisture](https://github.com/rogowski-piotr/iot-db-management/tree/master/sensors/soil-moisture)
+#### - [temperature and humidity](https://github.com/rogowski-piotr/iot-db-management/tree/master/sensors/temperature_humidity_dht11)
+
 <br/>
 
 ## 🔧 Configuration - Arduino IDE 🔧

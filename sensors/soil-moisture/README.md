@@ -7,7 +7,7 @@
     If measured value is not included in maximum and minimum acceptable value returned by the sensor the measurement will be marked as an error.
     Included to the response flag 'active' informs about correctness of sensor work.
     <br/>
-    Unfortunately this code work only on board ESP8266. ESP32 not support analog read while having WiFi connection.
+    Unfortunately this code work only on board ESP8266. ESP32 does not support analog read while having WiFi connection.
     <br/>
     Resolution of ADC is 10 bits.
 </p>
