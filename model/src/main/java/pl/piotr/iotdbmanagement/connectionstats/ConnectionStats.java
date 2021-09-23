@@ -6,6 +6,7 @@ import pl.piotr.iotdbmanagement.sensor.Sensor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +33,11 @@ public class ConnectionStats {
 
     @Column(name = "date")
     private LocalDate date;
+
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY)
+    @Column(name = "sensor_id")
+    private List<Sensor> sensors;
 
     @ToString.Exclude
     @OneToOne
