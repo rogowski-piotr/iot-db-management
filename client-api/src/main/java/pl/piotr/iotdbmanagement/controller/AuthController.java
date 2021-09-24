@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<AuthUserResponse> getAvailableTypes(@Valid @RequestBody LoginUserRequest request, UriComponentsBuilder builder) {
+    public ResponseEntity<AuthUserResponse> login(@Valid @RequestBody LoginUserRequest request, UriComponentsBuilder builder) {
         logger.info("Trying login: " + request.toString());
         try {
             if (authenticationProvider.authenticate(LoginUserRequest.dtoToAuthMapper().apply(request)).isAuthenticated()) {
