@@ -17,6 +17,8 @@ import java.util.function.Function;
 public class GetSensorResponse {
     private Long id;
 
+    private String name;
+
     private String socket;
 
     private Boolean isActive;
@@ -44,6 +46,7 @@ public class GetSensorResponse {
     public static Function<Sensor, GetSensorResponse> entityToDtoMapper() {
         return sensor -> GetSensorResponse.builder()
                 .id(sensor.getId())
+                .name(sensor.getName())
                 .socket(sensor.getSocket())
                 .isActive(sensor.getIsActive())
                 .measurementType(sensor.getMeasurementType().getType())
