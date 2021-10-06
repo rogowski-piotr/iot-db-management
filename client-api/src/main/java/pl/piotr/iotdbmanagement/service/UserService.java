@@ -8,6 +8,7 @@ import pl.piotr.iotdbmanagement.user.User;
 import pl.piotr.iotdbmanagement.user.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -29,6 +30,10 @@ public class UserService {
     public User findUserByEmail(String emailOrUsername) {
         return userRepository.findByEmailOrUsername(emailOrUsername, emailOrUsername)
                 .orElse(null);
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 
     public List<User> findAll() {
