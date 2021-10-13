@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.piotr.iotdbmanagement.role.Role;
 import pl.piotr.iotdbmanagement.role.RoleRepository;
 
+import java.util.List;
+
 @Service
 public class RoleService {
 
@@ -13,6 +15,10 @@ public class RoleService {
     @Autowired
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
+    }
+
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
     }
 
     public Role getRoleForUser() {
