@@ -8,6 +8,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import pl.piotr.iotdbmanagement.dto.measurment.CreateMeasurementTypeRequest;
 import pl.piotr.iotdbmanagement.dto.measurment.GetMeasurementResponse;
 import pl.piotr.iotdbmanagement.dto.measurment.GetMeasurementsResponse;
+import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
 import pl.piotr.iotdbmanagement.measurement.Measurement;
 import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.service.MeasurementService;
@@ -15,10 +16,12 @@ import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api_auth/measurements")
@@ -36,6 +39,14 @@ public class MeasurementController {
     @GetMapping("/available-types")
     public ResponseEntity<List<String>> getAvailableTypes() {
         return ResponseEntity.ok(measurementTypeService.getAllTypes());
+    }
+
+    @GetMapping("/available-frequencies")
+    public ResponseEntity<List<String>> getAvailableFrequencies() {
+        return ResponseEntity.ok(
+                Arrays.stream(MeasurementsFrequency.values())
+                    .map(Enum::toString)
+                    .collect(Collectors.toList()));
     }
 
     @PostMapping("/new-type")
