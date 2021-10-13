@@ -3,6 +3,7 @@ package pl.piotr.iotdbmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.piotr.iotdbmanagement.configuration.auth.PasswordMD5Encoder;
 import pl.piotr.iotdbmanagement.user.User;
 import pl.piotr.iotdbmanagement.user.UserRepository;
@@ -21,10 +22,16 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public void save(User user) {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public User update(User user) {
+        return userRepository.save(user);
     }
 
     public User findUserByEmail(String emailOrUsername) {

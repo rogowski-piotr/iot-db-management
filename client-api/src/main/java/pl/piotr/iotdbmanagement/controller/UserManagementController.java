@@ -2,25 +2,19 @@ package pl.piotr.iotdbmanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.piotr.iotdbmanagement.dto.user.GetRolesResponse;
 import pl.piotr.iotdbmanagement.dto.user.GetUserResponse;
 import pl.piotr.iotdbmanagement.dto.user.GetUsersResponse;
-import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.dto.user.UpdateUserRequest;
 import pl.piotr.iotdbmanagement.role.Role;
-import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.service.RoleService;
 import pl.piotr.iotdbmanagement.service.UserService;
 import pl.piotr.iotdbmanagement.user.User;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api_auth/users")
@@ -61,6 +55,20 @@ public class UserManagementController {
         return resultList.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(GetRolesResponse.entityToDtoMapper().apply(resultList));
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequest request, @PathVariable("id") Long id) {
+        logger.info("UPDATE");
+        Optional<User> userOptional = userService.findById(id);
+        Optional<Role> roleOptional = roleService.findRoleById(request.getRole());
+        if (userOptional.isPresent() && roleOptional.isPresent()) {
+            User updatedUser = UpdateUserRequest.dtoToEntityUpdater()
+                    .apply(userOptional.get(), roleOptional.get());
+            userService.update(updatedUser);
+            return ResponseEntity.accepted().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

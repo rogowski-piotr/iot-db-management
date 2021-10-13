@@ -6,6 +6,7 @@ import pl.piotr.iotdbmanagement.role.Role;
 import pl.piotr.iotdbmanagement.role.RoleRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService {
@@ -23,6 +24,10 @@ public class RoleService {
 
     public Role getRoleForUser() {
         return roleRepository.findRoleByName("USER").orElseThrow();
+    }
+
+    public Optional<Role> findRoleById(Long id) {
+        return roleRepository.findById(id);
     }
 
 }
