@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class SensorService {
+public class SensorService extends BaseService<Sensor> {
     private SensorRepository sensorRepository;
     private PlaceRepository placeRepository;
     private MeasurementRepository measurementRepository;
@@ -58,23 +58,6 @@ public class SensorService {
         });
 
         return getPageInLimit(result, limit, page);
-    }
-
-    private List<Sensor> getPageInLimit(List<Sensor> list, Integer limit, Integer page) {
-        if (limit == null) {
-            limit = 10;
-        }
-        if (page == null) {
-            page = 0;
-        }
-        int indexFrom = page * limit;
-        int indexTo = indexFrom + limit;
-        try {
-            list = list.subList(indexFrom, indexTo > list.size() ? list.size() : indexTo);
-        } catch (IllegalArgumentException | NullPointerException |IndexOutOfBoundsException e) {
-            list = List.of();
-        }
-        return list;
     }
 
     public Place findPlace(Long id) {

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
-public class MeasurementService {
+public class MeasurementService extends BaseService<Measurement> {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private MeasurementRepository measurementRepository;
     private SensorRepository sensorRepository;
@@ -89,19 +89,6 @@ public class MeasurementService {
         });
 
         return getPageInLimit(resultList, itemLimit, page);
-    }
-
-    private List<Measurement> getPageInLimit(List<Measurement> list, Integer limit, Integer page) {
-        if (limit == null) limit = 10;
-        if (page == null) page = 0;
-        int indexFrom = page * limit;
-        int indexTo = indexFrom + limit;
-        try {
-            list = list.subList(indexFrom, indexTo > list.size() ? list.size() : indexTo);
-        } catch (IllegalArgumentException | NullPointerException | IndexOutOfBoundsException e) {
-            list = List.of();
-        }
-        return list;
     }
 
     @Transactional
