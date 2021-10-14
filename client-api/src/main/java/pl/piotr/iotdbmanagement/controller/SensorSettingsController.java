@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.piotr.iotdbmanagement.dto.sensorsettings.GetSensorSettingResponse;
 import pl.piotr.iotdbmanagement.dto.sensorsettings.GetSensorSettingsResponse;
+import pl.piotr.iotdbmanagement.dto.sensorsettings.UpdateSensorSettingsRequest;
 import pl.piotr.iotdbmanagement.sensorsettings.SensorSettings;
 import pl.piotr.iotdbmanagement.service.SensorSettingsService;
 
@@ -42,6 +43,18 @@ public class SensorSettingsController {
         return sensorSettingsOptional
                 .map(sensorSettings -> ResponseEntity.ok(GetSensorSettingResponse.entityToDtoMapper().apply(sensorSettings)))
                 .orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateSensorsSettings(@RequestBody UpdateSensorSettingsRequest request, @PathVariable("id") Long id) {
+        logger.info("UPDATE");
+        Optional<SensorSettings> sensorSettingsOptional = sensorSettingsService.findOne(id);
+        if (sensorSettingsOptional.isPresent()) {
+            SensorSettings updatedSensorSettings = UpdateSensorSettingsRequest.dtoToEntityUpdater().apply(sensorSettingsOptional.get(), request, id);
+            sensorSettingsService.update(updatedSensorSettings);
+            return ResponseEntity.accepted().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }
