@@ -12,8 +12,10 @@ import pl.piotr.iotdbmanagement.service.RoleService;
 import pl.piotr.iotdbmanagement.service.UserService;
 import pl.piotr.iotdbmanagement.user.User;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 @RestController
@@ -67,6 +69,17 @@ public class UserManagementController {
                     .apply(userOptional.get(), roleOptional.get());
             userService.update(updatedUser);
             return ResponseEntity.accepted().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+        logger.info(MessageFormat.format("DELETE user, id: {0}", id));
+        Optional<User> userOptional = userService.findById(id);
+        if (userOptional.isPresent()) {
+            userService.delete(id);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }

@@ -34,6 +34,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
+
     public User findUserByEmail(String emailOrUsername) {
         return userRepository.findByEmailOrUsername(emailOrUsername, emailOrUsername)
                 .orElse(null);
