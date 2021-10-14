@@ -6,6 +6,7 @@ import pl.piotr.iotdbmanagement.sensorsettings.SensorSettings;
 import pl.piotr.iotdbmanagement.sensorsettings.SensorSettingsRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SensorSettingsService extends BaseService<SensorSettings> {
@@ -18,6 +19,10 @@ public class SensorSettingsService extends BaseService<SensorSettings> {
 
     public List<SensorSettings> findAll(Integer limit, Integer page) {
         return getPageInLimit(sensorSettingsRepository.findAll(), limit, page);
+    }
+
+    public Optional<SensorSettings> findOne(Long id) {
+        return sensorSettingsRepository.findById(id);
     }
 
 }

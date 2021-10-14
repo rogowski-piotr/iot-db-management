@@ -2,16 +2,15 @@ package pl.piotr.iotdbmanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.piotr.iotdbmanagement.dto.sensorsettings.GetSensorSettingResponse;
 import pl.piotr.iotdbmanagement.dto.sensorsettings.GetSensorSettingsResponse;
 import pl.piotr.iotdbmanagement.sensorsettings.SensorSettings;
 import pl.piotr.iotdbmanagement.service.SensorSettingsService;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
@@ -34,6 +33,15 @@ public class SensorSettingsController {
         return resultList.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(GetSensorSettingsResponse.entityToDtoMapper().apply(resultList));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<GetSensorSettingResponse> getSingleSensorsSettings(@PathVariable(name = "id") Long id) {
+        logger.info("GET single SensorsSettings, id: " + id);
+        Optional<SensorSettings> sensorSettingsOptional = sensorSettingsService.findOne(id);
+        return sensorSettingsOptional
+                .map(sensorSettings -> ResponseEntity.ok(GetSensorSettingResponse.entityToDtoMapper().apply(sensorSettings)))
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
 }
