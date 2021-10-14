@@ -2,6 +2,7 @@ package pl.piotr.iotdbmanagement.connectionstats;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 
 import javax.persistence.*;
@@ -35,13 +36,8 @@ public class ConnectionStats {
     private LocalDate date;
 
     @ToString.Exclude
-    @OneToMany(fetch = FetchType.LAZY)
-    @Column(name = "sensor_id")
-    private List<Sensor> sensors;
-
-    @ToString.Exclude
-    @OneToOne
-    @JoinColumn(name = "sensor_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "sensor_id")
     private Sensor sensor;
 
 }

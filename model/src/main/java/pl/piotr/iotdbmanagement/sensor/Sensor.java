@@ -71,6 +71,9 @@ public class Sensor implements Serializable {
     @OneToOne(mappedBy = "sensor", cascade = CascadeType.ALL)
     private SensorCurrentFailure failure;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "sensor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ConnectionStats> connectionStats;
 
     @PreRemove
     private void preRemove() {
