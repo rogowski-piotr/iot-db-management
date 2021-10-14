@@ -31,4 +31,9 @@ public class SensorSettingsService extends BaseService<SensorSettings> {
         return sensorSettingsRepository.save(sensorSettings);
     }
 
+    @Transactional
+    public SensorSettings create(SensorSettings sensorSettings) {
+        return sensorSettingsRepository.save(sensorSettings);
+    }
+
 }
