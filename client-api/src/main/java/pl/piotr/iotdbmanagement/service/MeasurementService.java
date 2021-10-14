@@ -39,7 +39,7 @@ public class MeasurementService {
 
     public List<Measurement> findAndFilterAll(Integer itemLimit, Integer page, MeasurementType measurementType,
                                               Long sensorId, Long placeId, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        List<Measurement> resultList;
+        List<Measurement> resultList = new ArrayList<>();
         if (measurementType != null) {
             resultList = measurementRepository.findAllByMeasurementType(measurementType);
 
