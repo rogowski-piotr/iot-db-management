@@ -72,4 +72,15 @@ public class SensorSettingsController {
                 .buildAndExpand(newSensorSettings.getId()).toUri()).build();
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteSensor(@PathVariable("id") Long id) {
+        logger.info(MessageFormat.format("DELETE, id: {0}", id));
+        Optional<SensorSettings> sensorSettingsOptional = sensorSettingsService.findOne(id);
+        if (sensorSettingsOptional.isPresent()) {
+            sensorSettingsService.delete(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }

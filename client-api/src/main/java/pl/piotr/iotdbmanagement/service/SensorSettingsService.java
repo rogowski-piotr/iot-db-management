@@ -36,4 +36,9 @@ public class SensorSettingsService extends BaseService<SensorSettings> {
         return sensorSettingsRepository.save(sensorSettings);
     }
 
+    @Transactional
+    public void delete(Long id) {
+        sensorSettingsRepository.deleteById(id);
+    }
+
 }
