@@ -3,15 +3,14 @@ package pl.piotr.iotdbmanagement.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.piotr.iotdbmanagement.dto.user.GetRolesResponse;
-import pl.piotr.iotdbmanagement.dto.user.GetUserResponse;
-import pl.piotr.iotdbmanagement.dto.user.GetUsersResponse;
-import pl.piotr.iotdbmanagement.dto.user.UpdateUserRequest;
+import org.springframework.web.util.UriComponentsBuilder;
+import pl.piotr.iotdbmanagement.dto.user.*;
 import pl.piotr.iotdbmanagement.role.Role;
 import pl.piotr.iotdbmanagement.service.RoleService;
 import pl.piotr.iotdbmanagement.service.UserService;
 import pl.piotr.iotdbmanagement.user.User;
 
+import javax.validation.Valid;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +56,21 @@ public class UserManagementController {
         return resultList.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(GetRolesResponse.entityToDtoMapper().apply(resultList));
+    }
+
+    @PostMapping
+    public ResponseEntity createUser(@Valid @RequestBody CreateUserRequest request, UriComponentsBuilder builder) {
+        logger.info("CREATE USER: " + request);
+        Optional<Role> roleOptional = roleService.findRoleById(request.getRole());
+        if (userService.findUserByEmail(request.getEmail()) != null) {
+            return ResponseEntity.badRequest().body("User with the given address already exists");
+        }
+        if (roleOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("Role with the given id not exists");
+        }
+        User user = CreateUserRequest.dtoToEntityMapper().apply(request, roleOptional.get());
+        userService.save(user);
+        return ResponseEntity.created(builder.pathSegment("api_auth", "users").build().toUri()).build();
     }
 
     @PutMapping("{id}")

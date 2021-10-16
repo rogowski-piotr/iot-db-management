@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResponseEntity createUser(@Valid @RequestBody RegisterUserRequest request, UriComponentsBuilder builder) {
+    public ResponseEntity registerUser(@Valid @RequestBody RegisterUserRequest request, UriComponentsBuilder builder) {
         logger.info("CREATE USER: " + request);
         if (userService.findUserByEmail(request.getEmail()) != null) {
             return ResponseEntity.badRequest().body("User with the given address already exists");
