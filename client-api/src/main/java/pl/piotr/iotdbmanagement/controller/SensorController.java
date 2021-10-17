@@ -12,8 +12,10 @@ import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.sensorsettings.SensorSettings;
 import pl.piotr.iotdbmanagement.service.MeasurementTypeService;
 import pl.piotr.iotdbmanagement.service.SensorService;
+import pl.piotr.iotdbmanagement.service.SensorSettingsService;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -25,11 +27,13 @@ import java.util.logging.Logger;
 public class SensorController {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private SensorService sensorService;
+    private SensorSettingsService sensorSettingsService;
     private MeasurementTypeService measurementTypeService;
 
     @Autowired
-    public SensorController(SensorService sensorService, MeasurementTypeService measurementTypeService) {
+    public SensorController(SensorService sensorService, MeasurementTypeService measurementTypeService, SensorSettingsService sensorSettingsService) {
         this.sensorService = sensorService;
+        this.sensorSettingsService = sensorSettingsService;
         this.measurementTypeService = measurementTypeService;
     }
 
@@ -63,12 +67,13 @@ public class SensorController {
     public ResponseEntity<Void> createSensor(@RequestBody CreateSensorRequest request, UriComponentsBuilder builder) {
         logger.info("CREATE" + request.getMeasurementType());
         Optional<Sensor> newSensor = sensorService.findBySocket(request.getSocket());
+        Optional<SensorSettings> sensorSettingsOptional = sensorSettingsService.findByIdOrElseGetDefault(request.getSensorSettingsId());
         Place place = sensorService.findPlace(request.getActualPositionPlaceId());
         MeasurementType type = measurementTypeService.getTypeOfString(request.getMeasurementType());
-        if (newSensor.isEmpty() && place != null && type != null) {
+        if (newSensor.isEmpty() && sensorSettingsOptional.isPresent() && place != null && type != null) {
             Sensor sensor = CreateSensorRequest
                     .dtoToEntityMapper()
-                    .apply(request, place, type);
+                    .apply(request, place, type, sensorSettingsOptional.get());
             sensorService.create(sensor);
             return ResponseEntity.created(builder.pathSegment("api", "sensors")
                     .buildAndExpand(sensor.getId()).toUri()).build();
@@ -80,12 +85,13 @@ public class SensorController {
     public ResponseEntity<Void> updateSensor(@RequestBody UpdateSensorRequest request, @PathVariable("id") Long id) {
         logger.info("UPDATE");
         Optional<Sensor> sensor = sensorService.find(id);
+        Optional<SensorSettings> sensorSettingsOptional = sensorSettingsService.findByIdOrElseGetDefault(request.getSensorSettingsId());
         Place newPosition = sensorService.findPlace(request.getActualPosition());
         MeasurementType type = measurementTypeService.getTypeOfString(request.getMeasurementType());
-        if (sensor.isPresent() && newPosition != null && type != null) {
+        if (sensor.isPresent() && sensorSettingsOptional.isPresent() && newPosition != null && type != null) {
             UpdateSensorRequest
                     .dtoToEntityUpdater()
-                    .apply(sensor.get(), request, newPosition, type);
+                    .apply(sensor.get(), request, newPosition, type, sensorSettingsOptional.get());
             sensorService.update(sensor.get());
             return ResponseEntity.accepted().build();
         }

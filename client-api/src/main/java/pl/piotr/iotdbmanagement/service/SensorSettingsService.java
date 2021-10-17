@@ -26,6 +26,11 @@ public class SensorSettingsService extends BaseService<SensorSettings> {
         return sensorSettingsRepository.findById(id);
     }
 
+    public Optional<SensorSettings> findByIdOrElseGetDefault(Long id) {
+        Optional<SensorSettings> foundById = sensorSettingsRepository.findById(id);
+        return foundById.isPresent() ? foundById : sensorSettingsRepository.findByName("default");
+    }
+
     @Transactional
     public SensorSettings update(SensorSettings sensorSettings) {
         return sensorSettingsRepository.save(sensorSettings);

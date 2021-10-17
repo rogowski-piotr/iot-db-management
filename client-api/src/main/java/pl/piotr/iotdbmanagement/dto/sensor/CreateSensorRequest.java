@@ -5,6 +5,8 @@ import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.sensorsettings.SensorSettings;
+import pl.piotr.iotdbmanagement.utils.QuadriFunction;
 import pl.piotr.iotdbmanagement.utils.TriFunction;
 
 @Getter
@@ -26,8 +28,10 @@ public class CreateSensorRequest {
 
     private Long actualPositionPlaceId;
 
-    public static TriFunction<CreateSensorRequest, Place, MeasurementType, Sensor> dtoToEntityMapper() {
-        return (request, place, type) ->
+    private Long sensorSettingsId;
+
+    public static QuadriFunction<CreateSensorRequest, Place, MeasurementType, SensorSettings, Sensor> dtoToEntityMapper() {
+        return (request, place, type, sensorSettings) ->
                 Sensor.builder()
                     .socket(request.getSocket())
                     .name(request.getName())
@@ -35,6 +39,7 @@ public class CreateSensorRequest {
                     .isActive(true)
                     .measurementsFrequency(request.getMeasurementsFrequency())
                     .actualPosition(place)
+                    .sensorSettings(sensorSettings)
                     .build();
     }
 

@@ -5,8 +5,8 @@ import pl.piotr.iotdbmanagement.measurementtype.MeasurementType;
 import pl.piotr.iotdbmanagement.place.Place;
 import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
-import pl.piotr.iotdbmanagement.utils.QuadriFunction;
-import pl.piotr.iotdbmanagement.utils.TriFunction;
+import pl.piotr.iotdbmanagement.sensorsettings.SensorSettings;
+import pl.piotr.iotdbmanagement.utils.PentaFunction;
 
 @Getter
 @Setter
@@ -29,14 +29,17 @@ public class UpdateSensorRequest {
 
     private Long actualPosition;
 
-    public static QuadriFunction<Sensor, UpdateSensorRequest, Place, MeasurementType, Sensor> dtoToEntityUpdater() {
-        return (sensor, request, place, measurementType) -> {
+    private Long sensorSettingsId;
+
+    public static PentaFunction<Sensor, UpdateSensorRequest, Place, MeasurementType, SensorSettings, Sensor> dtoToEntityUpdater() {
+        return (sensor, request, place, measurementType, sensorSettings) -> {
             sensor.setSocket(request.getSocket());
             sensor.setName(request.getName());
             sensor.setIsActive(request.getIsActive());
             sensor.setMeasurementType(measurementType);
             sensor.setMeasurementsFrequency(request.getMeasurementsFrequency());
             sensor.setActualPosition(place);
+            sensor.setSensorSettings(sensorSettings);
             return sensor;
         };
     }

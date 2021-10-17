@@ -76,6 +76,7 @@ public class SensorControllerTest {
         requestObject.setMeasurementType("TEMPERATURE_AND_HUMIDITY");
         requestObject.setMeasurementsFrequency(MeasurementsFrequency.ONCE_PER_DAY);
         requestObject.setActualPositionPlaceId(1L);
+        requestObject.setSensorSettingsId(1L);
 
         ResponseEntity<String> result = template.withBasicAuth("admin", "admin")
                 .postForEntity("/api_auth/sensors", requestObject, String.class);
@@ -102,6 +103,7 @@ public class SensorControllerTest {
         requestObject.setMeasurementsFrequency(sensor.getMeasurementsFrequency());
         requestObject.setIsActive(sensor.getIsActive());
         requestObject.setActualPosition(1L);
+        requestObject.setSensorSettingsId(1L);
         HttpEntity<UpdateSensorRequest> requestUpdate = new HttpEntity<>(requestObject, headers);
 
         ResponseEntity<String> result = template.withBasicAuth("admin", "admin")
