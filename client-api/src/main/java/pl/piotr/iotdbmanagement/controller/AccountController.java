@@ -3,6 +3,7 @@ package pl.piotr.iotdbmanagement.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.piotr.iotdbmanagement.dto.user.DeleteUserRequest;
 import pl.piotr.iotdbmanagement.dto.user.UpdatePasswordRequest;
 import pl.piotr.iotdbmanagement.service.UserService;
 import pl.piotr.iotdbmanagement.user.User;
@@ -37,6 +38,23 @@ public class AccountController {
             return ResponseEntity.accepted().build();
         }
         logger.info("can not update");
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteAccount(@Valid @RequestBody DeleteUserRequest request) {
+        logger.info("DELETE");
+        if (! userService.isCredentialsValid(request.getEmail(), request.getPassword())) {
+            logger.info("not valid credentials");
+            return ResponseEntity.status(401).build();
+        }
+        Optional<User> userOptional = userService.findByEmail(request.getEmail());
+        if (userOptional.isPresent()) {
+            userService.delete(userOptional.get().getId());
+            logger.info("deleted successful");
+            return ResponseEntity.noContent().build();
+        }
+        logger.info("can not delete");
         return ResponseEntity.notFound().build();
     }
 
