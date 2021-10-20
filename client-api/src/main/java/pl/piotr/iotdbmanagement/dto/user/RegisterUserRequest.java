@@ -27,7 +27,7 @@ public class RegisterUserRequest {
     private String email;
 
     @NotEmpty(message = "can not be empty")
-    @Size(min = 8, message = "password should have at least 8 characters")
+    @Size(min = 8, message = "should have at least 8 characters")
     private String password;
 
     public static Function<RegisterUserRequest, User> dtoToEntityMapper() {
