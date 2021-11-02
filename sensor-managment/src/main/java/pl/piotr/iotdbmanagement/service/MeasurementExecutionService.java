@@ -16,6 +16,7 @@ import pl.piotr.iotdbmanagement.sensorfailure.SensorFailureRepository;
 import pl.piotr.iotdbmanagement.sensorsettings.SensorSettingsRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -49,6 +50,9 @@ public class MeasurementExecutionService {
 
     @Transactional
     public Measurement addMeasurement(Measurement measurement) {
+        Sensor sensor = measurement.getSensor();
+        sensor.setLastMeasurment(LocalDateTime.now().plusHours(1));
+        sensorRepository.save(sensor);
         return measurementRepository.save(measurement);
     }
 

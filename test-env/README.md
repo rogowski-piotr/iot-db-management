@@ -44,14 +44,7 @@ $ docker build --rm -t test-env -f Dockerfile-java-env .
 $ docker-compose up
 ```
 
-#### 5. Fix date in containers
-```shell script
-$ docker exec -it sensor-managment date -s 'yyyy-MM-dd HH:mm:ss'
-$ docker exec -it client-api date -s 'yyyy-MM-dd HH:mm:ss'
-$ docker exec -it front-end date -s 'yyyy-MM-dd HH:mm:ss'
-```
-
-#### 6. Start backend app (requires .jar files)
+#### 5. Start backend app (requires .jar files)
 ```shell script
 $ ./reload_backend.sh
 ```

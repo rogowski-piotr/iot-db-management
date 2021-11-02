@@ -5,6 +5,7 @@ import pl.piotr.iotdbmanagement.sensor.Sensor;
 import pl.piotr.iotdbmanagement.service.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -55,7 +56,7 @@ public class Job implements Runnable {
     }
 
     private List<Measurement> convertResponseToObject(String response) throws InterruptedException {
-        ResponseConverter converter = new ResponseConverter(response, measurementExecutionService, LocalDateTime.now(), sensor);
+        ResponseConverter converter = new ResponseConverter(response, measurementExecutionService, LocalDateTime.now().plusHours(1), sensor);
         List<Measurement> convertedMeasurements = converter.convert();
         if (converter.isFailed()) {
             deactivateAndInterrupt();
