@@ -2,7 +2,7 @@ package pl.piotr.iotdbmanagement.service;
 
 import java.util.List;
 
-public class BaseService<T> {
+public abstract class BaseService<T> {
 
     protected List<T> getPageInLimit(List<T> list, Integer limit, Integer page) {
         if (limit == null) {
