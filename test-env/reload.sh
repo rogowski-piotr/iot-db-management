@@ -10,4 +10,4 @@ fi
 
 nohup java -jar $APP_FILE > $LOG_FILE &
 rm -f $PID_FILE
-pidof java > $PID_FILE
+echo "$!" > $PID_FILE
