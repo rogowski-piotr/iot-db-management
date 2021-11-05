@@ -115,9 +115,7 @@ public class MeasurementExecutionService {
         if (! sensor.getIsActive()) {
             sensor.setIsActive(true);
             sensorRepository.save(sensor);
-            Optional<SensorCurrentFailure> sensorFailureOptional = sensorFailureRepository.findFirstBySensor(sensor);
-            SensorCurrentFailure sensorCurrentFailure = sensorFailureOptional.orElseGet(() -> new SensorCurrentFailure(sensor));
-            sensorFailureRepository.delete(sensorCurrentFailure);
+            sensorFailureRepository.findFirstBySensor(sensor).ifPresent(sensorCurrentFailure -> sensorFailureRepository.delete(sensorCurrentFailure));
         }
     }
 
