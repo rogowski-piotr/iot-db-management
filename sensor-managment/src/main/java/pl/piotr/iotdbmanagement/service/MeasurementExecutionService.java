@@ -1,5 +1,6 @@
 package pl.piotr.iotdbmanagement.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.piotr.iotdbmanagement.connectionstats.ConnectionStats;
@@ -33,6 +34,7 @@ public class MeasurementExecutionService {
     private SensorFailureRepository sensorFailureRepository;
     private ConnectionStatsRepository connectionStatsRepository;
 
+    @Autowired
     public MeasurementExecutionService(MeasurementRepository measurementRepository, MeasurementTypeRepository measurementTypeRepository,
                                        SensorRepository sensorRepository, SensorSettingsRepository sensorSettingsRepository,
                                        SensorFailureRepository sensorFailureRepository, ConnectionStatsRepository connectionStatsRepository) {
@@ -112,10 +114,10 @@ public class MeasurementExecutionService {
 
     @Transactional
     public void verifyToActivate(Sensor sensor) {
+        sensorFailureRepository.findFirstBySensor(sensor).ifPresent(sensorCurrentFailure -> sensorFailureRepository.delete(sensorCurrentFailure));
         if (! sensor.getIsActive()) {
             sensor.setIsActive(true);
             sensorRepository.save(sensor);
-            sensorFailureRepository.findFirstBySensor(sensor).ifPresent(sensorCurrentFailure -> sensorFailureRepository.delete(sensorCurrentFailure));
         }
     }
 
