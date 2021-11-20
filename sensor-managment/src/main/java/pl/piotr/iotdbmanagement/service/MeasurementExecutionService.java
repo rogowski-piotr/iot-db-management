@@ -114,7 +114,7 @@ public class MeasurementExecutionService {
 
     @Transactional
     public void verifyToActivate(Sensor sensor) {
-        sensorFailureRepository.findFirstBySensor(sensor).ifPresent(sensorCurrentFailure -> sensorFailureRepository.delete(sensorCurrentFailure));
+        sensorFailureRepository.deleteBySensorId(sensor.getId());
         if (! sensor.getIsActive()) {
             sensor.setIsActive(true);
             sensorRepository.save(sensor);
