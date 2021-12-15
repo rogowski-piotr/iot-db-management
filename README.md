@@ -2,6 +2,7 @@
 > This is an implementation of platform to management IoT sensors.
 
 ## Contents
+* [Quick Start](#quick-start)
 * [General Info](#general-information)
   * [Frontend Application](#general-information)
   * [Modules](#general-information)
@@ -12,6 +13,12 @@
 * [Configuration](#Configuration)
 * [Testing](#Testing)
 
+
+##Quick Start
+To start the application, execute the following command:
+```shell script
+docker-compose up
+```
 
 ## General Information
 ### 🚀 Frontend Application 🚀
