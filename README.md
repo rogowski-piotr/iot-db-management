@@ -2,6 +2,7 @@
 > This is an implementation of platform to management IoT sensors.
 
 ## Contents
+* [Quick Start](#quick-start)
 * [General Info](#general-information)
   * [Frontend Application](#general-information)
   * [Modules](#general-information)
@@ -12,6 +13,16 @@
 * [Configuration](#Configuration)
 * [Testing](#Testing)
 
+
+## Quick Start
+To start the application, execute the following command:
+```shell script
+docker-compose up
+```
+*if you are working on windows run in Git Bash first:
+```shell script
+dos2unix test-env/sql/init_schema.sh
+```
 
 ## General Information
 ### 🚀 Frontend Application 🚀

@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  client-api:
+    build:
+      context: .
+      dockerfile: Dockerfile-Java
+    container_name: client-api
+    ports:
+      - 8080:8080
+    command: 'java -jar client-api/target/client-api-0.0.1-SNAPSHOT.jar'
+    depends_on:
+      - postgres
+    links:
+      - postgres
+
+  sensor-managment:
+    build:
+      context: .
+      dockerfile: Dockerfile-Java
+    container_name: sensor-managment
+    command: 'java -jar sensor-managment/target/sensor-managment-0.0.1-SNAPSHOT.jar'
+    depends_on:
+      - postgres
+    links:
+      - postgres
+
+  postgres:
+    image: 'postgres:latest'
+    container_name: postgres
+    environment:
+      - POSTGRES_ROOT_PASSWORD=postgres
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./test-env/sql:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  front-end:
+    build:
+      context: .
+      dockerfile: Dockerfile-Node
+    container_name: front-end
+    ports:
+      - "80:80"
+    command: bash -c 'cd iot-management-vue cat && git pull && npm run serve -- --port 80'

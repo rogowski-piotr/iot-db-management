@@ -1,0 +1,8 @@
+FROM jelastic/nodejs
+
+EXPOSE 80/tcp
+
+WORKDIR /app
+
+RUN git clone https://github.com/rogowski-piotr/iot-management-vue.git && \
+    npm install --prefix ./iot-management-vue
