@@ -41,7 +41,7 @@ $ git clone https://github.com/rogowski-piotr/iot-management-vue.git
 ```shell script
 $ docker build --rm -t node-env -f Dockerfile-node-env .
 $ docker build --rm -t test-env -f Dockerfile-java-env .
-$ docker-compose up
+$ docker-compose up -d
 ```
 
 #### 5. Start backend app (requires .jar files)
