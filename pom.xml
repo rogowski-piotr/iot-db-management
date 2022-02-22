@@ -12,6 +12,8 @@
         <module>client-api</module>
         <module>sensor-managment</module>
         <module>model</module>
+        <module>measurement-requester</module>
+        <module>measurement-executor</module>
     </modules>
 
 </project>
