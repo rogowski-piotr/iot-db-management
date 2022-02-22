@@ -10,8 +10,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import pl.piotr.iotdbmanagement.enums.MeasurementsFrequency;
+import pl.piotr.iotdbmanagement.sensor.Sensor;
+import pl.piotr.iotdbmanagement.service.MeasurementExecutionService;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
@@ -22,14 +25,13 @@ import java.util.logging.Logger;
 @EnableAsync
 public class JobsCaller {
     private final Logger logger = Logger.getLogger(this.getClass().getSimpleName());
-    private static final int MAX_THREAD_NUMBER = 3;
     private static final String MEASUREMENT_QUEUE_NAME = "measurements_queue";
-    private ExecutorService executor;
     private Channel channel;
+    private MeasurementExecutionService measurementExecutionService;
 
     @Autowired
-    public JobsCaller() {
-        executor = Executors.newFixedThreadPool(MAX_THREAD_NUMBER);
+    public JobsCaller(MeasurementExecutionService measurementExecutionService) {
+        this.measurementExecutionService = measurementExecutionService;
         try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost("localhost");
@@ -43,15 +45,18 @@ public class JobsCaller {
 
     private void call(MeasurementsFrequency measurementsFrequency) {
         logger.info("Job for: " + measurementsFrequency + " has been started");
-        try {
-            channel.basicPublish("", MEASUREMENT_QUEUE_NAME, null, "message".getBytes());
-        } catch (IOException exception) {
-            logger.warning("Can not publish message to queue cause: " + exception.getMessage());
-        }
+        List<Sensor> sensors = measurementExecutionService.findSensorsToMeasure(measurementsFrequency);
+        sensors.forEach(sensor -> {
+            try {
+                channel.basicPublish("", MEASUREMENT_QUEUE_NAME, null, sensor.getId().toString().getBytes());
+            } catch (IOException exception) {
+                logger.warning("Can not publish message to queue cause: " + exception.getMessage());
+            }
+        });
     }
 
     @Async
-    @Scheduled(cron = "0/10 * * * * ?", zone = "Europe/Warsaw")
+    @Scheduled(cron = "0 * * * * ?", zone = "Europe/Warsaw")
     public void jobOncePerMinute() {
         call(MeasurementsFrequency.ONCE_PER_MINUTE);
     }
@@ -97,5 +102,4 @@ public class JobsCaller {
     public void jobOncePerDay() {
         call(MeasurementsFrequency.ONCE_PER_DAY);
     }*/
-
 }
