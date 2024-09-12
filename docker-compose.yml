@@ -4,7 +4,7 @@ services:
   client-api:
     build:
       context: .
-      dockerfile: Dockerfile-Java
+      dockerfile: Docker/core-service/Dockerfile
     container_name: client-api
     ports:
       - 8080:8080
@@ -17,7 +17,7 @@ services:
   sensor-managment:
     build:
       context: .
-      dockerfile: Dockerfile-Java
+      dockerfile: Docker/core-service/Dockerfile
     container_name: sensor-managment
     command: 'java -jar sensor-managment/target/sensor-managment-0.0.1-SNAPSHOT.jar'
     depends_on:
@@ -37,11 +37,11 @@ services:
     ports:
       - "5432:5432"
 
-  front-end:
-    build:
-      context: .
-      dockerfile: Dockerfile-Node
-    container_name: front-end
-    ports:
-      - "80:80"
-    command: bash -c 'cd iot-management-vue cat && git pull && npm run serve -- --port 80'
+#  front-end:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile-Node
+#    container_name: front-end
+#    ports:
+#      - "80:80"
+#    command: bash -c 'cd iot-management-vue cat && git pull && npm run serve -- --port 80'

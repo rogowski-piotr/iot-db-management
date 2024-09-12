@@ -1,0 +1,5 @@
+rootProject.name = 'Services'
+include 'CoreService'
+include 'SensorManagerService'
+include 'Common:Model'
+include 'Common:Utils'

@@ -1,0 +1,22 @@
+dependencies {
+    implementation(project(":Common:Model"))
+    implementation(project(":Common:Utils"))
+
+    implementation(libs.spring.boot.starter)
+    implementation(libs.spring.boot.starter.data.jpa)
+    implementation(libs.spring.boot.starter.web)
+    implementation(libs.spring.boot.starter.security)
+    implementation(libs.spring.boot.starter.validation)
+    implementation(libs.gson)
+    implementation(libs.h2)
+    implementation(libs.jaxb.api)
+    implementation(libs.jaxb.runtime)
+
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.junit.vintage.engine)
+    testImplementation(libs.h2)
+}
+
+test {
+    useJUnitPlatform()
+}

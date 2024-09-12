@@ -1,0 +1,61 @@
+package com.iotdbmanagement.core.controller;
+
+import com.iotdbmanagement.core.dto.user.DeleteUserRequest;
+import com.iotdbmanagement.core.dto.user.UpdatePasswordRequest;
+import com.iotdbmanagement.core.user.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.iotdbmanagement.core.service.UserService;
+
+import javax.validation.Valid;
+import java.util.Optional;
+import java.util.logging.Logger;
+
+@RestController
+@RequestMapping("api_auth/account")
+public class AccountController {
+
+    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private UserService userService;
+
+    @Autowired
+    public AccountController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PutMapping("/update-password")
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody UpdatePasswordRequest request) {
+        logger.info("UPDATE-PASSWORD");
+        if (! userService.isCredentialsValid(request.getEmail(), request.getCurrentPassword())) {
+            logger.info("not valid credentials");
+            return ResponseEntity.status(401).build();
+        }
+        Optional<User> userOptional = userService.findByEmail(request.getEmail());
+        if (userOptional.isPresent()) {
+            userService.updatePassword(userOptional.get(), request.getNewPassword());
+            logger.info("updated successful");
+            return ResponseEntity.accepted().build();
+        }
+        logger.info("can not update");
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteAccount(@Valid @RequestBody DeleteUserRequest request) {
+        logger.info("DELETE");
+        if (! userService.isCredentialsValid(request.getEmail(), request.getPassword())) {
+            logger.info("not valid credentials");
+            return ResponseEntity.status(401).build();
+        }
+        Optional<User> userOptional = userService.findByEmail(request.getEmail());
+        if (userOptional.isPresent()) {
+            userService.delete(userOptional.get().getId());
+            logger.info("deleted successful");
+            return ResponseEntity.noContent().build();
+        }
+        logger.info("can not delete");
+        return ResponseEntity.notFound().build();
+    }
+
+}
