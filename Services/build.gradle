@@ -1,0 +1,28 @@
+allprojects {
+    version = '1.0'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compileOnly(libs.lombok)
+        annotationProcessor(libs.lombok)
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "PASSED", "FAILED", "SKIPPED"
+            showStandardStreams = true
+            exceptionFormat "full"
+        }
+    }
+}

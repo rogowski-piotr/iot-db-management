@@ -1,0 +1,133 @@
+name: Builder Services
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  build-core-service:
+    name: Build Core Service
+    runs-on: ubuntu-latest
+    steps:
+      # TODO: Remove all "mock step" and uncomment ppl code
+      - name: mock step
+        run: |
+          echo "mock step :)"
+      # - name: Build And Test Core Service
+      #   run: |
+      #     docker build --target builder -f Docker/core-service/Dockerfile -t core-service-builder . && \
+      #     docker run --rm core-service-builder ./gradlew test --warning-mode all :CoreService:build && \
+      #     docker build --target package -f Docker/core-service/Dockerfile -t core-service .
+
+      # - name: Save Core Service Final Image
+      #   run: |
+      #     docker save core-service | gzip > core-service.tar.gz
+
+      # - name: Upload Core Service Final Image
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: core-service.tar.gz
+      #     path: core-service.tar.gz
+      #     retention-days: 1
+
+  functional-test-core-service:
+    name: Functional Test Core Service
+    runs-on: ubuntu-latest
+    needs: build-core-service
+    steps:
+      - name: mock step
+        run: |
+          echo "mock step :)"
+
+
+
+
+  build-sensor-manager-service:
+    name: Build Sensor Manager Service
+    runs-on: ubuntu-latest
+    steps:
+      # TODO: Remove all "mock step" and uncomment ppl code
+      - name: mock step
+        run: |
+          echo "mock step :)"
+      # - name: Build Test And Packege Sensor Manager Service
+      #   run: |
+      #     docker build --target builder -f Docker/sensor-manager-service/Dockerfile -t sensor-manager-service-builder . && \
+      #     docker run --rm sensor-manager-service-builder ./gradlew test --warning-mode all :SensorManagerService:build && \
+      #     docker build --target package -f Docker/sensor-manager-service/Dockerfile -t sensor-manager-service .
+
+      # - name: Save Sensor Manager Service Final Image
+      #   run: |
+      #     docker save sensor-manager-service | gzip > sensor-manager-service.tar.gz
+
+      # - name: Upload Sensor Manager Service Final Image
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: sensor-manager-service.tar.gz
+      #     path: sensor-manager-service.tar.gz
+      #     retention-days: 1
+
+  functional-test-sensor-manager-service:
+    name: Functional Test Sensor Manager Service
+    runs-on: ubuntu-latest
+    needs: build-sensor-manager-service
+    steps:
+      - name: mock step
+        run: |
+          echo "mock step :)"
+
+
+
+
+  build-executor-manager-service:
+    name: Build Executor Manager Service
+    runs-on: ubuntu-latest
+    steps:
+      # TODO: Remove all "mock step" and uncomment ppl code
+      - name: mock step
+        run: |
+          echo "mock step :)"
+      # - name: Build Test And Packege Executor Manager Service
+      #   run: |
+      #     docker build --target builder -f Docker/executor-manager-service/Dockerfile -t executor-manager-service-builder . && \
+      #     docker run --rm executor-manager-service-builder ./gradlew test --warning-mode all :ExecutorManagerService:build && \
+      #     docker build --target package -f Docker/executor-manager-service/Dockerfile -t executor-manager-service .
+
+      # - name: Save Executor Manager Service Final Image
+      #   run: |
+      #     docker save executor-manager-service | gzip > executor-manager-service.tar.gz
+
+      # - name: Upload Executor Manager Service Final Image
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: executor-manager-service.tar.gz
+      #     path: executor-manager-service.tar.gz
+      #     retention-days: 1
+
+  functional-test-executor-manager-service:
+    name: Functional Test Executor Manager Service
+    runs-on: ubuntu-latest
+    needs: build-executor-manager-service
+    steps:
+      - name: mock step
+        run: |
+          echo "mock step :)"
+
+
+
+
+  end-to-end-backend-test:
+    name: End To End Backend Test
+    runs-on: ubuntu-latest
+    needs:
+      - functional-test-core-service 
+      - functional-test-sensor-manager-service
+      - functional-test-executor-manager-service
+    steps:
+      - name: mock step
+        run: |
+          echo "mock step :)"

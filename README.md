@@ -78,3 +78,21 @@ Main platform communicates with sensors using the TCP network protocol.
 Prepared collection available: [here](https://www.postman.com/collections/b1f839feccff33a996f7)
 - Automatic tests are provided by GitHub actions and a configured CI pipeline for launching JUnit tests using Maven triggered on every push changes.
 
+## Architecture
+```mermaid
+graph TD;
+    %% Reverse Proxy
+    Nginx[Nginx Reverse Proxy] -->|Routes requests| AuthenticationService
+    Nginx -->|Routes requests| CoreService
+    Nginx -->|Routes requests| SensorManagerService
+
+    %% Authentication Service
+    AuthenticationService -->|Stores user data| AuthDatabase[(Auth Database)]
+
+    %% Queue and Communication
+    CoreService -->|Sends tasks| Queue[(Message Broker)]
+    Queue -->|Receives tasks| ExecutionManagerService
+
+    %% Core Communication
+    CoreService -->|Handles sensor management| SensorManagerService
+```
